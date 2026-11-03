@@ -1,0 +1,962 @@
+// ==============================================================
+// 40~69委託佈告欄 (Divine-Pride 全數值校正版)
+// ==============================================================
+
+prt_fild08,186,377,4	script	40~69	857,{
+
+L_MainMenu:
+    // 計算當前可回報的任務數量
+    .@claim_cnt = 0;
+    if (EB2_Q1_Status == 2) .@claim_cnt++;
+    if (EB2_Q2_Status == 2) .@claim_cnt++;
+    if (EB2_Q3_Status == 1 && countitem(25074) >= 10) .@claim_cnt++;
+    if (EB2_Q4_Status == 1 && EB2_Q4_M1 >= 10 && countitem(932) >= 10 && countitem(955) >= 5 && countitem(962) >= 5) .@claim_cnt++;
+    if (EB2_Q5_Status == 2) .@claim_cnt++;
+    if (EB2_Q6_Status == 2) .@claim_cnt++;
+    if (EB2_Q7_Status == 1 && EB2_Q7_M1 >= 10 && countitem(966) >= 5) .@claim_cnt++;
+    if (EB2_Q8_Status == 2) .@claim_cnt++;
+    if (EB2_Q9_Status == 2) .@claim_cnt++;
+    if (EB2_Q10_Status == 2) .@claim_cnt++;
+    if (EB2_Q11_Status == 2) .@claim_cnt++;
+    if (EB2_Q12_Status == 2) .@claim_cnt++;
+    if (EB2_Q13_Status == 2) .@claim_cnt++;
+    if (EB2_Q14_Status == 2) .@claim_cnt++;
+    if (EB2_Q15_Status == 1 && EB2_Q15_M1 >= 10 && EB2_Q15_M2 >= 10 && countitem(1052) >= 10) .@claim_cnt++;
+    if (EB2_Q16_Status == 1 && EB2_Q16_M1 >= 10 && countitem(960) >= 5) .@claim_cnt++;
+    if (EB2_Q17_Status == 2) .@claim_cnt++;
+    if (EB2_Q18_Status == 1 && EB2_Q18_M1 >= 20 && countitem(1024) >= 10) .@claim_cnt++;
+    if (EB2_Q19_Status == 1 && EB2_Q19_M1 >= 10 && countitem(953) >= 1) .@claim_cnt++;
+    if (EB2_Q20_Status == 2) .@claim_cnt++;
+    if (EB2_Q21_Status == 1 && EB2_Q21_M1 >= 10 && countitem(928) >= 1) .@claim_cnt++;
+    if (EB2_Q22_Status == 2) .@claim_cnt++;
+    if (EB2_Q23_Status == 2) .@claim_cnt++;
+    if (EB2_Q24_Status == 2) .@claim_cnt++;
+    if (EB2_Q25_Status == 1 && EB2_Q25_M1 >= 15 && EB2_Q25_M2 >= 15 && countitem(25073) >= 10) .@claim_cnt++;
+    if (EB2_Q26_Status == 1 && EB2_Q26_M1 >= 10 && countitem(1056) >= 5) .@claim_cnt++;
+    if (EB2_Q27_Status == 1 && EB2_Q27_M1 >= 15 && EB2_Q27_M2 >= 15 && countitem(609) >= 15) .@claim_cnt++;
+    if (EB2_Q28_Status == 2) .@claim_cnt++;
+    if (EB2_Q29_Status == 1 && EB2_Q29_M1 >= 12 && countitem(1049) >= 3) .@claim_cnt++;
+    if (EB2_Q30_Status == 2) .@claim_cnt++;
+    if (EB2_Q31_Status == 2) .@claim_cnt++;
+    if (EB2_Q32_Status == 2) .@claim_cnt++;
+    if (EB2_Q33_Status == 2) .@claim_cnt++;
+    if (EB2_Q34_Status == 2) .@claim_cnt++;
+
+    mes "[40~69委託佈告欄]";
+    mes "這裡張貼著適合等級 40～69 冒險者接取的委託懸賞。";
+    mes "完成委託後，冷卻時間為 ^FF000020 小時^000000。";
+    next;
+
+    .@claim_btn$ = (.@claim_cnt > 0 ? "^007700【★ 一鍵回報所有已完成委託 (" + .@claim_cnt + "個) ★】^000000" : "^777777【一鍵回報 (目前無可回報任務)】^000000");
+
+    switch(select(.@claim_btn$ + ":【失事輪 委託】:【毀葛 / 獸人村 委託】:【依斯魯得島 委託】:【夢羅克 委託】:【斐揚密穴 / 吉芬地下 / 克魔島】:離開")) {
+
+        // ======================================================
+        // 【一鍵批次回報】
+        // ======================================================
+        case 1:
+            if (.@claim_cnt == 0) {
+                mes "[40~69佈告欄]";
+                mes "目前沒有任何已完成的委託可以領賞喔！";
+                next;
+                goto L_MainMenu;
+            }
+
+            .@tb = 0; .@tj = 0;
+            .@cd = gettimetick(2) + 72000;
+
+            // 失事輪
+            if (EB2_Q1_Status == 2) { .@tb += 8600; .@tj += 9600; EB2_Q1_Status = 0; EB2_Q1_M1 = 0; EB2_Q1_CD = .@cd; }
+            if (EB2_Q2_Status == 2) { .@tb += 6500; .@tj += 6500; EB2_Q2_Status = 0; EB2_Q2_M1 = 0; EB2_Q2_CD = .@cd; }
+            if (EB2_Q3_Status == 1 && countitem(25074) >= 10) { delitem 25074, 10; .@tb += 7000; .@tj += 7000; EB2_Q3_Status = 0; EB2_Q3_CD = .@cd; }
+            if (EB2_Q4_Status == 1 && EB2_Q4_M1 >= 10 && countitem(932) >= 10 && countitem(955) >= 5 && countitem(962) >= 5) {
+                delitem 932, 10; delitem 955, 5; delitem 962, 5; .@tb += 9600; .@tj += 8280; EB2_Q4_Status = 0; EB2_Q4_M1 = 0; EB2_Q4_CD = .@cd;
+            }
+            if (EB2_Q5_Status == 2) { .@tb += 11800; .@tj += 9600; EB2_Q5_Status = 0; EB2_Q5_M1 = 0; EB2_Q5_M2 = 0; EB2_Q5_CD = .@cd; }
+
+            // 毀葛
+            if (EB2_Q6_Status == 2) { .@tb += 8400; .@tj += 8380; EB2_Q6_Status = 0; EB2_Q6_M1 = 0; EB2_Q6_M2 = 0; EB2_Q6_CD = .@cd; }
+            if (EB2_Q7_Status == 1 && EB2_Q7_M1 >= 10 && countitem(966) >= 5) {
+                delitem 966, 5; .@tb += 8400; .@tj += 8380; EB2_Q7_Status = 0; EB2_Q7_M1 = 0; EB2_Q7_CD = .@cd;
+            }
+
+            // 獸人村
+            if (EB2_Q8_Status == 2) { .@tb += 28700; .@tj += 27400; EB2_Q8_Status = 0; EB2_Q8_M1 = 0; EB2_Q8_M2 = 0; EB2_Q8_CD = .@cd; }
+            if (EB2_Q9_Status == 2) { .@tb += 16000; .@tj += 12000; EB2_Q9_Status = 0; EB2_Q9_M1 = 0; EB2_Q9_CD = .@cd; }
+            if (EB2_Q10_Status == 2) { .@tb += 23520; .@tj += 24300; EB2_Q10_Status = 0; EB2_Q10_M1 = 0; EB2_Q10_M2 = 0; EB2_Q10_M3 = 0; EB2_Q10_CD = .@cd; }
+            if (EB2_Q11_Status == 2) { .@tb += 13000; .@tj += 8200; EB2_Q11_Status = 0; EB2_Q11_M1 = 0; EB2_Q11_M2 = 0; EB2_Q11_CD = .@cd; }
+            if (EB2_Q12_Status == 2) { .@tb += 13000; .@tj += 8600; EB2_Q12_Status = 0; EB2_Q12_M1 = 0; EB2_Q12_M2 = 0; EB2_Q12_CD = .@cd; }
+            if (EB2_Q13_Status == 2) { .@tb += 11800; .@tj += 11900; EB2_Q13_Status = 0; EB2_Q13_M1 = 0; EB2_Q13_M2 = 0; EB2_Q13_CD = .@cd; }
+
+            // 依斯魯得島
+            if (EB2_Q14_Status == 2) { .@tb += 8400; .@tj += 8380; EB2_Q14_Status = 0; EB2_Q14_M1 = 0; EB2_Q14_M2 = 0; EB2_Q14_CD = .@cd; }
+            if (EB2_Q15_Status == 1 && EB2_Q15_M1 >= 10 && EB2_Q15_M2 >= 10 && countitem(1052) >= 10) {
+                delitem 1052, 10; .@tb += 9600; .@tj += 8380; EB2_Q15_Status = 0; EB2_Q15_M1 = 0; EB2_Q15_M2 = 0; EB2_Q15_CD = .@cd;
+            }
+            if (EB2_Q16_Status == 1 && EB2_Q16_M1 >= 10 && countitem(960) >= 5) {
+                delitem 960, 5; .@tb += 7800; .@tj += 8380; EB2_Q16_Status = 0; EB2_Q16_M1 = 0; EB2_Q16_CD = .@cd;
+            }
+            if (EB2_Q17_Status == 2) { .@tb += 12400; .@tj += 14380; EB2_Q17_Status = 0; EB2_Q17_M1 = 0; EB2_Q17_M2 = 0; EB2_Q17_CD = .@cd; }
+            if (EB2_Q18_Status == 1 && EB2_Q18_M1 >= 20 && countitem(1024) >= 10) {
+                delitem 1024, 10; .@tb += 10640; .@tj += 10240; EB2_Q18_Status = 0; EB2_Q18_M1 = 0; EB2_Q18_CD = .@cd;
+            }
+            if (EB2_Q19_Status == 1 && EB2_Q19_M1 >= 10 && countitem(953) >= 1) {
+                delitem 953, 1; .@tb += 9600; .@tj += 9600; EB2_Q19_Status = 0; EB2_Q19_M1 = 0; EB2_Q19_CD = .@cd;
+            }
+            if (EB2_Q20_Status == 2) { .@tb += 17200; .@tj += 15600; EB2_Q20_Status = 0; EB2_Q20_M1 = 0; EB2_Q20_M2 = 0; EB2_Q20_CD = .@cd; }
+
+            // 夢羅克
+            if (EB2_Q21_Status == 1 && EB2_Q21_M1 >= 10 && countitem(928) >= 1) {
+                delitem 928, 1; .@tb += 7200; .@tj += 7800; EB2_Q21_Status = 0; EB2_Q21_M1 = 0; EB2_Q21_CD = .@cd;
+            }
+            if (EB2_Q22_Status == 2) { .@tb += 12000; .@tj += 12800; EB2_Q22_Status = 0; EB2_Q22_M1 = 0; EB2_Q22_M2 = 0; EB2_Q22_CD = .@cd; }
+            if (EB2_Q23_Status == 2) { .@tb += 16740; .@tj += 17880; EB2_Q23_Status = 0; EB2_Q23_M1 = 0; EB2_Q23_CD = .@cd; }
+            if (EB2_Q24_Status == 2) { .@tb += 19450; .@tj += 20090; EB2_Q24_Status = 0; EB2_Q24_M1 = 0; EB2_Q24_M2 = 0; EB2_Q24_CD = .@cd; }
+            if (EB2_Q25_Status == 1 && EB2_Q25_M1 >= 15 && EB2_Q25_M2 >= 15 && countitem(25073) >= 10) {
+                delitem 25073, 10; .@tb += 25640; .@tj += 24210; EB2_Q25_Status = 0; EB2_Q25_M1 = 0; EB2_Q25_M2 = 0; EB2_Q25_CD = .@cd;
+            }
+            if (EB2_Q26_Status == 1 && EB2_Q26_M1 >= 10 && countitem(1056) >= 5) {
+                delitem 1056, 5; .@tb += 10800; .@tj += 9600; EB2_Q26_Status = 0; EB2_Q26_M1 = 0; EB2_Q26_CD = .@cd;
+            }
+
+            // 斐揚密穴
+            if (EB2_Q27_Status == 1 && EB2_Q27_M1 >= 15 && EB2_Q27_M2 >= 15 && countitem(609) >= 15) {
+                delitem 609, 15; .@tb += 13200; .@tj += 12300; EB2_Q27_Status = 0; EB2_Q27_M1 = 0; EB2_Q27_M2 = 0; EB2_Q27_CD = .@cd;
+            }
+            if (EB2_Q28_Status == 2) { .@tb += 9600; .@tj += 9600; EB2_Q28_Status = 0; EB2_Q28_M1 = 0; EB2_Q28_CD = .@cd; }
+            if (EB2_Q29_Status == 1 && EB2_Q29_M1 >= 12 && countitem(1049) >= 3) {
+                delitem 1049, 3; .@tb += 10480; .@tj += 12400; EB2_Q29_Status = 0; EB2_Q29_M1 = 0; EB2_Q29_CD = .@cd;
+            }
+
+            // 吉芬地下
+            if (EB2_Q30_Status == 2) { .@tb += 8000; .@tj += 6800; EB2_Q30_Status = 0; EB2_Q30_M1 = 0; EB2_Q30_CD = .@cd; }
+            if (EB2_Q31_Status == 2) { .@tb += 14800; .@tj += 13660; EB2_Q31_Status = 0; EB2_Q31_M1 = 0; EB2_Q31_M2 = 0; EB2_Q31_CD = .@cd; }
+
+            // 克魔島
+            if (EB2_Q32_Status == 2) { .@tb += 10000; .@tj += 10000; EB2_Q32_Status = 0; EB2_Q32_M1 = 0; EB2_Q32_M2 = 0; EB2_Q32_CD = .@cd; }
+            if (EB2_Q33_Status == 2) { .@tb += 20000; .@tj += 20000; EB2_Q33_Status = 0; EB2_Q33_M1 = 0; EB2_Q33_M2 = 0; EB2_Q33_M3 = 0; EB2_Q33_CD = .@cd; }
+            if (EB2_Q34_Status == 2) { .@tb += 15000; .@tj += 15000; EB2_Q34_Status = 0; EB2_Q34_M1 = 0; EB2_Q34_M2 = 0; EB2_Q34_CD = .@cd; }
+
+            getexp .@tb, .@tj;
+            specialeffect2 438;
+            mes "[40~69佈告欄]";
+            mes "【一鍵回報完成！】";
+            mes "本次共結算 ^0000FF" + .@claim_cnt + "^000000 個委託！";
+            mes "獲得 Base 經驗值：^FF0000+" + .@tb + "^000000";
+            mes "獲得 Job 經驗值：^FF0000+" + .@tj + "^000000";
+            mes "回報的委託已進入 20 小時冷卻期。";
+            next;
+            goto L_MainMenu;
+
+        // ======================================================
+        // 分區 1：失事輪
+        // ======================================================
+        case 2:
+        L_Reg_1:
+            .@now = gettimetick(2);
+            if (.@now < EB2_Q1_CD) .@m1$ = "^777777【CD " + ((EB2_Q1_CD - .@now)/3600) + "h】^000000";
+            else if (EB2_Q1_Status == 2) .@m1$ = "^007700【可領賞】^000000";
+            else if (EB2_Q1_Status == 1) .@m1$ = "^0000FF【進行中 " + EB2_Q1_M1 + "/20】^000000";
+            else .@m1$ = "【接取】";
+            .@m1$ = .@m1$ + "拯救好友 (Lv 40)";
+
+            if (.@now < EB2_Q2_CD) .@m2$ = "^777777【CD " + ((EB2_Q2_CD - .@now)/3600) + "h】^000000";
+            else if (EB2_Q2_Status == 2) .@m2$ = "^007700【可領賞】^000000";
+            else if (EB2_Q2_Status == 1) .@m2$ = "^0000FF【進行中 " + EB2_Q2_M1 + "/10】^000000";
+            else .@m2$ = "【接取】";
+            .@m2$ = .@m2$ + "挖庫克雷肝吃 (Lv 40)";
+
+            if (.@now < EB2_Q3_CD) .@m3$ = "^777777【CD " + ((EB2_Q3_CD - .@now)/3600) + "h】^000000";
+            else if (EB2_Q3_Status == 1 && countitem(25074) >= 10) .@m3$ = "^007700【可領賞】^000000";
+            else if (EB2_Q3_Status == 1) .@m3$ = "^0000FF【進行中】^000000";
+            else .@m3$ = "【接取】";
+            .@m3$ = .@m3$ + "無中生有的經濟邏輯 (Lv 40)";
+
+            if (.@now < EB2_Q4_CD) .@m4$ = "^777777【CD " + ((EB2_Q4_CD - .@now)/3600) + "h】^000000";
+            else if (EB2_Q4_Status == 1 && EB2_Q4_M1 >= 10 && countitem(932) >= 10 && countitem(955) >= 5 && countitem(962) >= 5) .@m4$ = "^007700【可領賞】^000000";
+            else if (EB2_Q4_Status == 1) .@m4$ = "^0000FF【進行中】^000000";
+            else .@m4$ = "【接取】";
+            .@m4$ = .@m4$ + "掃蕩失事輪1樓 (Lv 40)";
+
+            if (.@now < EB2_Q5_CD) .@m5$ = "^777777【CD " + ((EB2_Q5_CD - .@now)/3600) + "h】^000000";
+            else if (EB2_Q5_Status == 2) .@m5$ = "^007700【可領賞】^000000";
+            else if (EB2_Q5_Status == 1) .@m5$ = "^0000FF【進行中】^000000";
+            else .@m5$ = "【接取】";
+            .@m5$ = .@m5$ + "掃蕩失事輪2樓 (Lv 40)";
+
+            switch(select(.@m1$ + ":" + .@m2$ + ":" + .@m3$ + ":" + .@m4$ + ":" + .@m5$ + ":返回上一層")) {
+                case 1:
+                    mes "[拯救好友] (需求 Lv 40)";
+                    mes "目標：邪骸海盜 20 隻。"; next;
+                    if (gettimetick(2) < EB2_Q1_CD) mes "冷卻中。";
+                    else if (EB2_Q1_Status == 2) {
+                        getexp 8600, 9600; EB2_Q1_Status = 0; EB2_Q1_M1 = 0; EB2_Q1_CD = gettimetick(2) + 72000; specialeffect2 249; mes "委託達成！";
+                    } else if (EB2_Q1_Status == 1) mes "進度：邪骸海盜 " + EB2_Q1_M1 + " / 20。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q1_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_1;
+
+                case 2:
+                    mes "[挖庫克雷肝吃] (需求 Lv 40)";
+                    mes "目標：庫克雷 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q2_CD) mes "冷卻中。";
+                    else if (EB2_Q2_Status == 2) {
+                        getexp 6500, 6500; EB2_Q2_Status = 0; EB2_Q2_M1 = 0; EB2_Q2_CD = gettimetick(2) + 72000; specialeffect2 249; mes "委託達成！";
+                    } else if (EB2_Q2_Status == 1) mes "進度：庫克雷 " + EB2_Q2_M1 + " / 10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q2_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_1;
+
+                case 3:
+                    mes "[無中生有的經濟邏輯] (需求 Lv 40)";
+                    mes "目標：古董硬幣 10 個。"; next;
+                    if (gettimetick(2) < EB2_Q3_CD) mes "冷卻中。";
+                    else if (EB2_Q3_Status == 1 && countitem(25074) >= 10) {
+                        delitem 25074, 10; getexp 7000, 7000; EB2_Q3_Status = 0; EB2_Q3_CD = gettimetick(2) + 72000; specialeffect2 249; mes "委託達成！收繳 10 個古董硬幣。";
+                    } else if (EB2_Q3_Status == 1) mes "古董硬幣：" + countitem(25074) + " / 10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q3_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_1;
+
+                case 4:
+                    mes "[掃蕩失事輪1樓] (需求 Lv 40)";
+                    mes "目標：海葵 10 隻，死人遺骨 10 個，昆蟲外殼 5 個，觸鬚 5 個。"; next;
+                    if (gettimetick(2) < EB2_Q4_CD) mes "冷卻中。";
+                    else if (EB2_Q4_Status == 1 && EB2_Q4_M1 >= 10 && countitem(932) >= 10 && countitem(955) >= 5 && countitem(962) >= 5) {
+                        delitem 932, 10; delitem 955, 5; delitem 962, 5; getexp 9600, 8280; EB2_Q4_Status = 0; EB2_Q4_M1 = 0; EB2_Q4_CD = gettimetick(2) + 72000; specialeffect2 249; mes "委託達成！";
+                    } else if (EB2_Q4_Status == 1) mes "海葵 " + EB2_Q4_M1 + "/10，遺骨 " + countitem(932) + "/10，外殼 " + countitem(955) + "/5，觸鬚 " + countitem(962) + "/5。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q4_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_1;
+
+                case 5:
+                    mes "[掃蕩失事輪2樓] (需求 Lv 40)";
+                    mes "目標：白幽靈 10 隻，迅捷彎刀海盜骷髏 1 隻。"; next;
+                    if (gettimetick(2) < EB2_Q5_CD) mes "冷卻中。";
+                    else if (EB2_Q5_Status == 2) {
+                        getexp 11800, 9600; EB2_Q5_Status = 0; EB2_Q5_M1 = 0; EB2_Q5_M2 = 0; EB2_Q5_CD = gettimetick(2) + 72000; specialeffect2 249; mes "委託達成！";
+                    } else if (EB2_Q5_Status == 1) mes "白幽靈 " + EB2_Q5_M1 + "/10，迅捷彎刀海盜骷髏 " + EB2_Q5_M2 + "/1。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q5_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_1;
+
+                case 6: goto L_MainMenu;
+            }
+            break;
+
+        // ======================================================
+        // 分區 2：毀葛 / 獸人村
+        // ======================================================
+        case 3:
+        L_Reg_2:
+            .@now = gettimetick(2);
+            if (.@now < EB2_Q6_CD) .@m6$ = "^777777【CD】^000000"; else if (EB2_Q6_Status == 2) .@m6$ = "^007700【可領賞】^000000"; else if (EB2_Q6_Status == 1) .@m6$ = "^0000FF【進行中】^000000"; else .@m6$ = "【接取】";
+            .@m6$ = .@m6$ + "高尚的戰爭 (Lv 40)";
+            if (.@now < EB2_Q7_CD) .@m7$ = "^777777【CD】^000000"; else if (EB2_Q7_Status == 1 && EB2_Q7_M1 >= 10 && countitem(966) >= 5) .@m7$ = "^007700【可領賞】^000000"; else if (EB2_Q7_Status == 1) .@m7$ = "^0000FF【進行中】^000000"; else .@m7$ = "【接取】";
+            .@m7$ = .@m7$ + "採蛤蜊體驗 (Lv 40)";
+            if (.@now < EB2_Q8_CD) .@m8$ = "^777777【CD】^000000"; else if (EB2_Q8_Status == 2) .@m8$ = "^007700【可領賞】^000000"; else if (EB2_Q8_Status == 1) .@m8$ = "^0000FF【進行中】^000000"; else .@m8$ = "【接取】";
+            .@m8$ = .@m8$ + "該死的獸人 (Lv 40)";
+            if (.@now < EB2_Q9_CD) .@m9$ = "^777777【CD】^000000"; else if (EB2_Q9_Status == 2) .@m9$ = "^007700【可領賞】^000000"; else if (EB2_Q9_Status == 1) .@m9$ = "^0000FF【進行中】^000000"; else .@m9$ = "【接取】";
+            .@m9$ = .@m9$ + "食心鬼 (Lv 40)";
+            if (.@now < EB2_Q10_CD) .@m10$ = "^777777【CD】^000000"; else if (EB2_Q10_Status == 2) .@m10$ = "^007700【可領賞】^000000"; else if (EB2_Q10_Status == 1) .@m10$ = "^0000FF【進行中】^000000"; else .@m10$ = "【接取】";
+            .@m10$ = .@m10$ + "獸人-一網打盡大作戰 (Lv 40)";
+
+            switch(select(.@m6$ + ":" + .@m7$ + ":" + .@m8$ + ":" + .@m9$ + ":" + .@m10$ + ":下一頁:返回上一層")) {
+                case 1:
+                    mes "[高尚的戰爭] 目標：海星 10 隻，卡拉蟹 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q6_CD) mes "冷卻中。";
+                    else if (EB2_Q6_Status == 2) { getexp 8400, 8380; EB2_Q6_Status = 0; EB2_Q6_M1 = 0; EB2_Q6_M2 = 0; EB2_Q6_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q6_Status == 1) mes "海星 " + EB2_Q6_M1 + "/10，卡拉蟹 " + EB2_Q6_M2 + "/10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q6_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_2;
+
+                case 2:
+                    mes "[採蛤蜊體驗] 目標：貝殼魔靈 10 隻，蛤蜊肉 5 個。"; next;
+                    if (gettimetick(2) < EB2_Q7_CD) mes "冷卻中。";
+                    else if (EB2_Q7_Status == 1 && EB2_Q7_M1 >= 10 && countitem(966) >= 5) {
+                        delitem 966, 5; getexp 8400, 8380; EB2_Q7_Status = 0; EB2_Q7_M1 = 0; EB2_Q7_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q7_Status == 1) mes "貝殼魔靈 " + EB2_Q7_M1 + "/10，蛤蜊肉 " + countitem(966) + "/5。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q7_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_2;
+
+                case 3:
+                    mes "[該死的獸人] 目標：邪骸獸人 20 隻，獸人腐屍 20 隻。"; next;
+                    if (gettimetick(2) < EB2_Q8_CD) mes "冷卻中。";
+                    else if (EB2_Q8_Status == 2) { getexp 28700, 27400; EB2_Q8_Status = 0; EB2_Q8_M1 = 0; EB2_Q8_M2 = 0; EB2_Q8_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q8_Status == 1) mes "邪骸獸人 " + EB2_Q8_M1 + "/20，獸人腐屍 " + EB2_Q8_M2 + "/20。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q8_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_2;
+
+                case 4:
+                    mes "[食心鬼] 目標：茲諾克 20 隻。"; next;
+                    if (gettimetick(2) < EB2_Q9_CD) mes "冷卻中。";
+                    else if (EB2_Q9_Status == 2) { getexp 16000, 12000; EB2_Q9_Status = 0; EB2_Q9_M1 = 0; EB2_Q9_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q9_Status == 1) mes "茲諾克 " + EB2_Q9_M1 + "/20。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q9_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_2;
+
+                case 5:
+                    mes "[獸人-一網打盡大作戰] 目標：獸人戰士 15 隻，獸人女戰士 15 隻，獸人嬰兒 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q10_CD) mes "冷卻中。";
+                    else if (EB2_Q10_Status == 2) { getexp 23520, 24300; EB2_Q10_Status = 0; EB2_Q10_M1 = 0; EB2_Q10_M2 = 0; EB2_Q10_M3 = 0; EB2_Q10_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q10_Status == 1) mes "戰士 " + EB2_Q10_M1 + "/15，女戰士 " + EB2_Q10_M2 + "/15，嬰兒 " + EB2_Q10_M3 + "/10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q10_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_2;
+
+                case 6:
+                L_Reg_Goblin:
+                    .@now = gettimetick(2);
+                    if (.@now < EB2_Q11_CD) .@m11$ = "^777777【CD】^000000"; else if (EB2_Q11_Status == 2) .@m11$ = "^007700【可領賞】^000000"; else if (EB2_Q11_Status == 1) .@m11$ = "^0000FF【進行中】^000000"; else .@m11$ = "【接取】";
+                    .@m11$ = .@m11$ + "整頓凶猛哥布靈 (Lv 40)";
+                    if (.@now < EB2_Q12_CD) .@m12$ = "^777777【CD】^000000"; else if (EB2_Q12_Status == 2) .@m12$ = "^007700【可領賞】^000000"; else if (EB2_Q12_Status == 1) .@m12$ = "^0000FF【進行中】^000000"; else .@m12$ = "【接取】";
+                    .@m12$ = .@m12$ + "整頓敏捷哥布靈 (Lv 40)";
+                    if (.@now < EB2_Q13_CD) .@m13$ = "^777777【CD】^000000"; else if (EB2_Q13_Status == 2) .@m13$ = "^007700【可領賞】^000000"; else if (EB2_Q13_Status == 1) .@m13$ = "^0000FF【進行中】^000000"; else .@m13$ = "【接取】";
+                    .@m13$ = .@m13$ + "為難的傢伙們 (Lv 50)";
+
+                    switch(select(.@m11$ + ":" + .@m12$ + ":" + .@m13$ + ":返回上一層")) {
+                        case 1:
+                            mes "[整頓凶猛哥布靈] 目標：大斧哥布靈 10 隻，鏈鋸哥布靈 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q11_CD) mes "冷卻中。";
+                            else if (EB2_Q11_Status == 2) { getexp 13000, 8200; EB2_Q11_Status = 0; EB2_Q11_M1 = 0; EB2_Q11_M2 = 0; EB2_Q11_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q11_Status == 1) mes "大斧 " + EB2_Q11_M1 + "/10，鏈鋸 " + EB2_Q11_M2 + "/10。";
+                            else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q11_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_Goblin;
+
+                        case 2:
+                            mes "[整頓敏捷哥布靈] 目標：榔頭哥布靈 10 隻，刺刀哥布靈 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q12_CD) mes "冷卻中。";
+                            else if (EB2_Q12_Status == 2) { getexp 13000, 8600; EB2_Q12_Status = 0; EB2_Q12_M1 = 0; EB2_Q12_M2 = 0; EB2_Q12_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q12_Status == 1) mes "榔頭 " + EB2_Q12_M1 + "/10，刺刀 " + EB2_Q12_M2 + "/10。";
+                            else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q12_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_Goblin;
+
+                        case 3:
+                            mes "[為難的傢伙們] 目標：弓箭哥布靈 10 隻，刺錘哥布靈 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q13_CD) mes "冷卻中。";
+                            else if (EB2_Q13_Status == 2) { getexp 11800, 11900; EB2_Q13_Status = 0; EB2_Q13_M1 = 0; EB2_Q13_M2 = 0; EB2_Q13_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q13_Status == 1) mes "弓箭 " + EB2_Q13_M1 + "/10，刺錘 " + EB2_Q13_M2 + "/10。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q13_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_Goblin;
+
+                        case 4: goto L_Reg_2;
+                    }
+                    break;
+
+                case 7: goto L_MainMenu;
+            }
+            break;
+
+        // ======================================================
+        // 分區 3：依斯魯得島 (海底洞穴)
+        // ======================================================
+        case 4:
+        L_Reg_3:
+            .@now = gettimetick(2);
+            if (.@now < EB2_Q14_CD) .@m14$ = "^777777【CD】^000000"; else if (EB2_Q14_Status == 2) .@m14$ = "^007700【可領賞】^000000"; else if (EB2_Q14_Status == 1) .@m14$ = "^0000FF【進行中】^000000"; else .@m14$ = "【接取】";
+            .@m14$ = .@m14$ + "雞蛋和蝦蜢 (Lv 40)";
+            if (.@now < EB2_Q15_CD) .@m15$ = "^777777【CD】^000000"; else if (EB2_Q15_Status == 1 && EB2_Q15_M1 >= 10 && EB2_Q15_M2 >= 10 && countitem(1052) >= 10) .@m15$ = "^007700【可領賞】^000000"; else if (EB2_Q15_Status == 1) .@m15$ = "^0000FF【進行中】^000000"; else .@m15$ = "【接取】";
+            .@m15$ = .@m15$ + "生物學最難的是採樣 (Lv 40)";
+            if (.@now < EB2_Q16_CD) .@m16$ = "^777777【CD】^000000"; else if (EB2_Q16_Status == 1 && EB2_Q16_M1 >= 10 && countitem(960) >= 5) .@m16$ = "^007700【可領賞】^000000"; else if (EB2_Q16_Status == 1) .@m16$ = "^0000FF【進行中】^000000"; else .@m16$ = "【接取】";
+            .@m16$ = .@m16$ + "進水時要划槳 (Lv 40)";
+            if (.@now < EB2_Q17_CD) .@m17$ = "^777777【CD】^000000"; else if (EB2_Q17_Status == 2) .@m17$ = "^007700【可領賞】^000000"; else if (EB2_Q17_Status == 1) .@m17$ = "^0000FF【進行中】^000000"; else .@m17$ = "【接取】";
+            .@m17$ = .@m17$ + "對好友的關懷 (Lv 50)";
+
+            switch(select(.@m14$ + ":" + .@m15$ + ":" + .@m16$ + ":" + .@m17$ + ":下一頁:返回上一層")) {
+                case 1:
+                    mes "[雞蛋和蝦蜢] 目標：魔鍋蛋 10 隻，重金屬蝗蟲 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q14_CD) mes "冷卻中。";
+                    else if (EB2_Q14_Status == 2) { getexp 8400, 8380; EB2_Q14_Status = 0; EB2_Q14_M1 = 0; EB2_Q14_M2 = 0; EB2_Q14_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q14_Status == 1) mes "魔鍋蛋 " + EB2_Q14_M1 + "/10，重金屬蝗蟲 " + EB2_Q14_M2 + "/10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q14_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_3;
+
+                case 2:
+                    mes "[生物學最難的是採樣] 目標：水母 10 隻，漂浮蟲 10 隻，單細胞 10 個。"; next;
+                    if (gettimetick(2) < EB2_Q15_CD) mes "冷卻中。";
+                    else if (EB2_Q15_Status == 1 && EB2_Q15_M1 >= 10 && EB2_Q15_M2 >= 10 && countitem(1052) >= 10) {
+                        delitem 1052, 10; getexp 9600, 8380; EB2_Q15_Status = 0; EB2_Q15_M1 = 0; EB2_Q15_M2 = 0; EB2_Q15_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q15_Status == 1) mes "水母 " + EB2_Q15_M1 + "/10，漂浮蟲 " + EB2_Q15_M2 + "/10，單細胞 " + countitem(1052) + "/10。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q15_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_3;
+
+                case 3:
+                    mes "[進水時要划槳] 目標：螃蟹 10 隻，鉗子 5 個。"; next;
+                    if (gettimetick(2) < EB2_Q16_CD) mes "冷卻中。";
+                    else if (EB2_Q16_Status == 1 && EB2_Q16_M1 >= 10 && countitem(960) >= 5) {
+                        delitem 960, 5; getexp 7800, 8380; EB2_Q16_Status = 0; EB2_Q16_M1 = 0; EB2_Q16_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q16_Status == 1) mes "螃蟹 " + EB2_Q16_M1 + "/10，鉗子 " + countitem(960) + "/5。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q16_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_3;
+
+                case 4:
+                    mes "[對好友的關懷] 目標：異變魚 10 隻，馬克 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q17_CD) mes "冷卻中。";
+                    else if (EB2_Q17_Status == 2) { getexp 12400, 14380; EB2_Q17_Status = 0; EB2_Q17_M1 = 0; EB2_Q17_M2 = 0; EB2_Q17_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q17_Status == 1) mes "異變魚 " + EB2_Q17_M1 + "/10，馬克 " + EB2_Q17_M2 + "/10。";
+                    else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q17_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_3;
+
+                case 5:
+                L_Reg_DeepSea:
+                    .@now = gettimetick(2);
+                    if (.@now < EB2_Q18_CD) .@m18$ = "^777777【CD】^000000"; else if (EB2_Q18_Status == 1 && EB2_Q18_M1 >= 20 && countitem(1024) >= 10) .@m18$ = "^007700【可領賞】^000000"; else if (EB2_Q18_Status == 1) .@m18$ = "^0000FF【進行中】^000000"; else .@m18$ = "【接取】";
+                    .@m18$ = .@m18$ + "採購料理食材 (Lv 50)";
+                    if (.@now < EB2_Q19_CD) .@m19$ = "^777777【CD】^000000"; else if (EB2_Q19_Status == 1 && EB2_Q19_M1 >= 10 && countitem(953) >= 1) .@m19$ = "^007700【可領賞】^000000"; else if (EB2_Q19_Status == 1) .@m19$ = "^0000FF【進行中】^000000"; else .@m19$ = "【接取】";
+                    .@m19$ = .@m19$ + "幻想裡的女人 (Lv 50)";
+                    if (.@now < EB2_Q20_CD) .@m20$ = "^777777【CD】^000000"; else if (EB2_Q20_Status == 2) .@m20$ = "^007700【可領賞】^000000"; else if (EB2_Q20_Status == 1) .@m20$ = "^0000FF【進行中】^000000"; else .@m20$ = "【接取】";
+                    .@m20$ = .@m20$ + "煩人的守衛 (Lv 50)";
+
+                    switch(select(.@m18$ + ":" + .@m19$ + ":" + .@m20$ + ":返回上一層")) {
+                        case 1:
+                            mes "[採購料理食材] 目標：烏賊 20 隻，墨汁 10 個。"; next;
+                            if (gettimetick(2) < EB2_Q18_CD) mes "冷卻中。";
+                            else if (EB2_Q18_Status == 1 && EB2_Q18_M1 >= 20 && countitem(1024) >= 10) {
+                                delitem 1024, 10; getexp 10640, 10240; EB2_Q18_Status = 0; EB2_Q18_M1 = 0; EB2_Q18_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                            } else if (EB2_Q18_Status == 1) mes "烏賊 " + EB2_Q18_M1 + "/20，墨汁 " + countitem(1024) + "/10。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q18_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_DeepSea;
+
+                        case 2:
+                            mes "[幻想裡的女人] 目標：人魚 10 隻，人魚之心 1 個。"; next;
+                            if (gettimetick(2) < EB2_Q19_CD) mes "冷卻中。";
+                            else if (EB2_Q19_Status == 1 && EB2_Q19_M1 >= 10 && countitem(953) >= 1) {
+                                delitem 953, 1; getexp 9600, 9600; EB2_Q19_Status = 0; EB2_Q19_M1 = 0; EB2_Q19_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                            } else if (EB2_Q19_Status == 1) mes "人魚 " + EB2_Q19_M1 + "/10，人魚之心 " + countitem(953) + "/1。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q19_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_DeepSea;
+
+                        case 3:
+                            mes "[煩人的守衛] 目標：海神 10 隻，人魚士兵 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q20_CD) mes "冷卻中。";
+                            else if (EB2_Q20_Status == 2) { getexp 17200, 15600; EB2_Q20_Status = 0; EB2_Q20_M1 = 0; EB2_Q20_M2 = 0; EB2_Q20_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q20_Status == 1) mes "海神 " + EB2_Q20_M1 + "/10，人魚士兵 " + EB2_Q20_M2 + "/10。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q20_Status = 1; mes "已接取！"; } }
+                            next; goto L_Reg_DeepSea;
+
+                        case 4: goto L_Reg_3;
+                    }
+                    break;
+
+                case 6: goto L_MainMenu;
+            }
+            break;
+
+        // ======================================================
+        // 分區 4：夢羅克 (金字塔與人面獅身像)
+        // ======================================================
+        case 5:
+        L_Reg_4:
+            .@now = gettimetick(2);
+            if (.@now < EB2_Q21_CD) .@m21$ = "^777777【CD】^000000"; else if (EB2_Q21_Status == 1 && EB2_Q21_M1 >= 10 && countitem(928) >= 1) .@m21$ = "^007700【可領賞】^000000"; else if (EB2_Q21_Status == 1) .@m21$ = "^0000FF【進行中】^000000"; else .@m21$ = "【接取】";
+            .@m21$ = .@m21$ + "木乃伊和藍色箱子 (Lv 40)";
+            if (.@now < EB2_Q22_CD) .@m22$ = "^777777【CD】^000000"; else if (EB2_Q22_Status == 2) .@m22$ = "^007700【可領賞】^000000"; else if (EB2_Q22_Status == 1) .@m22$ = "^0000FF【進行中】^000000"; else .@m22$ = "【接取】";
+            .@m22$ = .@m22$ + "無法入睡 (Lv 50)";
+            if (.@now < EB2_Q23_CD) .@m23$ = "^777777【CD】^000000"; else if (EB2_Q23_Status == 2) .@m23$ = "^007700【可領賞】^000000"; else if (EB2_Q23_Status == 1) .@m23$ = "^0000FF【進行中】^000000"; else .@m23$ = "【接取】";
+            .@m23$ = .@m23$ + "擊殺蛇女伊絲 (Lv 60)";
+            if (.@now < EB2_Q24_CD) .@m24$ = "^777777【CD】^000000"; else if (EB2_Q24_Status == 2) .@m24$ = "^007700【可領賞】^000000"; else if (EB2_Q24_Status == 1) .@m24$ = "^0000FF【進行中】^000000"; else .@m24$ = "【接取】";
+            .@m24$ = .@m24$ + "人面獅身像的工人們 (Lv 60)";
+            if (.@now < EB2_Q25_CD) .@m25$ = "^777777【CD】^000000"; else if (EB2_Q25_Status == 1 && EB2_Q25_M1 >= 15 && EB2_Q25_M2 >= 15 && countitem(25073) >= 10) .@m25$ = "^007700【可領賞】^000000"; else if (EB2_Q25_Status == 1) .@m25$ = "^0000FF【進行中】^000000"; else .@m25$ = "【接取】";
+            .@m25$ = .@m25$ + "人面獅身像的秘密 (Lv 60)";
+            if (.@now < EB2_Q26_CD) .@m26$ = "^777777【CD】^000000"; else if (EB2_Q26_Status == 1 && EB2_Q26_M1 >= 10 && countitem(1056) >= 5) .@m26$ = "^007700【可領賞】^000000"; else if (EB2_Q26_Status == 1) .@m26$ = "^0000FF【進行中】^000000"; else .@m26$ = "【接取】";
+            .@m26$ = .@m26$ + "阻撓前程的傢伙們 (Lv 50)";
+
+            switch(select(.@m21$ + ":" + .@m22$ + ":" + .@m23$ + ":" + .@m24$ + ":" + .@m25$ + ":" + .@m26$ + ":返回上一層")) {
+                case 1:
+                    mes "[木乃伊和藍色箱子] 目標：木乃伊 10 隻，亡者遺物 1 個。"; next;
+                    if (gettimetick(2) < EB2_Q21_CD) mes "冷卻中。";
+                    else if (EB2_Q21_Status == 1 && EB2_Q21_M1 >= 10 && countitem(928) >= 1) {
+                        delitem 928, 1; getexp 7200, 7800; EB2_Q21_Status = 0; EB2_Q21_M1 = 0; EB2_Q21_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q21_Status == 1) mes "木乃伊 " + EB2_Q21_M1 + "/10，亡者遺物 " + countitem(928) + "/1。";
+                    else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q21_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 2:
+                    mes "[無法入睡] 目標：木乃伊犬 10 隻，米洛斯 10 隻。"; next;
+                    if (gettimetick(2) < EB2_Q22_CD) mes "冷卻中。";
+                    else if (EB2_Q22_Status == 2) { getexp 12000, 12800; EB2_Q22_Status = 0; EB2_Q22_M1 = 0; EB2_Q22_M2 = 0; EB2_Q22_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q22_Status == 1) mes "木乃伊犬 " + EB2_Q22_M1 + "/10，米洛斯 " + EB2_Q22_M2 + "/10。";
+                    else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q22_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 3:
+                    mes "[擊殺蛇女伊絲] 目標：蛇女伊絲 20 隻。"; next;
+                    if (gettimetick(2) < EB2_Q23_CD) mes "冷卻中。";
+                    else if (EB2_Q23_Status == 2) { getexp 16740, 17880; EB2_Q23_Status = 0; EB2_Q23_M1 = 0; EB2_Q23_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q23_Status == 1) mes "蛇女伊絲 " + EB2_Q23_M1 + "/20。";
+                    else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q23_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 4:
+                    mes "[人面獅身像的工人們] 目標：傑洛米 15 隻，諾可伊 15 隻。"; next;
+                    if (gettimetick(2) < EB2_Q24_CD) mes "冷卻中。";
+                    else if (EB2_Q24_Status == 2) { getexp 19450, 20090; EB2_Q24_Status = 0; EB2_Q24_M1 = 0; EB2_Q24_M2 = 0; EB2_Q24_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                    else if (EB2_Q24_Status == 1) mes "傑洛米 " + EB2_Q24_M1 + "/15，諾可伊 " + EB2_Q24_M2 + "/15。";
+                    else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q24_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 5:
+                    mes "[人面獅身像的秘密] 目標：馬爾杜克 15 隻，帕莎納 15 隻，神秘莎草紙 10 個。"; next;
+                    if (gettimetick(2) < EB2_Q25_CD) mes "冷卻中。";
+                    else if (EB2_Q25_Status == 1 && EB2_Q25_M1 >= 15 && EB2_Q25_M2 >= 15 && countitem(25073) >= 10) {
+                        delitem 25073, 10; getexp 25640, 24210; EB2_Q25_Status = 0; EB2_Q25_M1 = 0; EB2_Q25_M2 = 0; EB2_Q25_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q25_Status == 1) mes "馬爾杜克 " + EB2_Q25_M1 + "/15，帕莎納 " + EB2_Q25_M2 + "/15，莎草紙 " + countitem(25073) + "/10。";
+                    else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q25_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 6:
+                    mes "[阻撓前程的傢伙們] 目標：泥人 10 隻，黃玉碎片 5 個。"; next;
+                    if (gettimetick(2) < EB2_Q26_CD) mes "冷卻中。";
+                    else if (EB2_Q26_Status == 1 && EB2_Q26_M1 >= 10 && countitem(1056) >= 5) {
+                        delitem 1056, 5; getexp 10800, 9600; EB2_Q26_Status = 0; EB2_Q26_M1 = 0; EB2_Q26_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                    } else if (EB2_Q26_Status == 1) mes "泥人 " + EB2_Q26_M1 + "/10，黃玉碎片 " + countitem(1056) + "/5。";
+                    else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q26_Status = 1; mes "已接取！"; } }
+                    next; goto L_Reg_4;
+
+                case 7: goto L_MainMenu;
+            }
+            break;
+
+        // ======================================================
+        // 分區 5：斐揚密穴 / 吉芬地下 / 克魔島
+        // ======================================================
+        case 6:
+        L_Reg_5:
+            switch(select("【斐揚密穴 委託 (Lv 50)】:【吉芬地下 委託 (Lv 55)】:【克魔島區域 委託 (Lv 60)】:返回上一層")) {
+                case 1:
+                L_Sub_Payon:
+                    .@now = gettimetick(2);
+                    if (.@now < EB2_Q27_CD) .@m27$ = "^777777【CD】^000000"; else if (EB2_Q27_Status == 1 && EB2_Q27_M1 >= 15 && EB2_Q27_M2 >= 15 && countitem(609) >= 15) .@m27$ = "^007700【可領賞】^000000"; else if (EB2_Q27_Status == 1) .@m27$ = "^0000FF【進行中】^000000"; else .@m27$ = "【接取】";
+                    .@m27$ = .@m27$ + "淨化靈魂儀式 (Lv 50)";
+                    if (.@now < EB2_Q28_CD) .@m28$ = "^777777【CD】^000000"; else if (EB2_Q28_Status == 2) .@m28$ = "^007700【可領賞】^000000"; else if (EB2_Q28_Status == 1) .@m28$ = "^0000FF【進行中】^000000"; else .@m28$ = "【接取】";
+                    .@m28$ = .@m28$ + "用一杯酒撫慰悲傷 (Lv 50)";
+                    if (.@now < EB2_Q29_CD) .@m29$ = "^777777【CD】^000000"; else if (EB2_Q29_Status == 1 && EB2_Q29_M1 >= 12 && countitem(1049) >= 3) .@m29$ = "^007700【可領賞】^000000"; else if (EB2_Q29_Status == 1) .@m29$ = "^0000FF【進行中】^000000"; else .@m29$ = "【接取】";
+                    .@m29$ = .@m29$ + "魔法的蹤跡 (Lv 50)";
+
+                    switch(select(.@m27$ + ":" + .@m28$ + ":" + .@m29$ + ":返回上一層")) {
+                        case 1:
+                            mes "[淨化靈魂儀式] 目標：殭屍 15 隻，妖道 15 隻，返魂符 15 個。"; next;
+                            if (gettimetick(2) < EB2_Q27_CD) mes "冷卻中。";
+                            else if (EB2_Q27_Status == 1 && EB2_Q27_M1 >= 15 && EB2_Q27_M2 >= 15 && countitem(609) >= 15) {
+                                delitem 609, 15; getexp 13200, 12300; EB2_Q27_Status = 0; EB2_Q27_M1 = 0; EB2_Q27_M2 = 0; EB2_Q27_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                            } else if (EB2_Q27_Status == 1) mes "殭屍 " + EB2_Q27_M1 + "/15，妖道 " + EB2_Q27_M2 + "/15，返魂符 " + countitem(609) + "/15。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q27_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Payon;
+
+                        case 2:
+                            mes "[用一杯酒撫慰悲傷] 目標：淨化鬼火 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q28_CD) mes "冷卻中。";
+                            else if (EB2_Q28_Status == 2) { getexp 9600, 9600; EB2_Q28_Status = 0; EB2_Q28_M1 = 0; EB2_Q28_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q28_Status == 1) mes "鬼火 " + EB2_Q28_M1 + "/10。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q28_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Payon;
+
+                        case 3:
+                            mes "[魔法的蹤跡] 目標：鬼女 12 隻，少女手帕 3 個。"; next;
+                            if (gettimetick(2) < EB2_Q29_CD) mes "冷卻中。";
+                            else if (EB2_Q29_Status == 1 && EB2_Q29_M1 >= 12 && countitem(1049) >= 3) {
+                                delitem 1049, 3; getexp 10480, 12400; EB2_Q29_Status = 0; EB2_Q29_M1 = 0; EB2_Q29_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！";
+                            } else if (EB2_Q29_Status == 1) mes "鬼女 " + EB2_Q29_M1 + "/12，手帕 " + countitem(1049) + "/3。";
+                            else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q29_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Payon;
+
+                        case 4: goto L_Reg_5;
+                    }
+                    break;
+
+                case 2:
+                L_Sub_Geffen:
+                    .@now = gettimetick(2);
+                    if (.@now < EB2_Q30_CD) .@m30$ = "^777777【CD】^000000"; else if (EB2_Q30_Status == 2) .@m30$ = "^007700【可領賞】^000000"; else if (EB2_Q30_Status == 1) .@m30$ = "^0000FF【進行中】^000000"; else .@m30$ = "【接取】";
+                    .@m30$ = .@m30$ + "擊殺赤蒼蠅 (Lv 55)";
+                    if (.@now < EB2_Q31_CD) .@m31$ = "^777777【CD】^000000"; else if (EB2_Q31_Status == 2) .@m31$ = "^007700【可領賞】^000000"; else if (EB2_Q31_Status == 1) .@m31$ = "^0000FF【進行中】^000000"; else .@m31$ = "【接取】";
+                    .@m31$ = .@m31$ + "擊殺綠腐屍 (Lv 55)";
+
+                    switch(select(.@m30$ + ":" + .@m31$ + ":返回上一層")) {
+                        case 1:
+                            mes "[擊殺赤蒼蠅] 目標：赤蒼蠅 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q30_CD) mes "冷卻中。";
+                            else if (EB2_Q30_Status == 2) { getexp 8000, 6800; EB2_Q30_Status = 0; EB2_Q30_M1 = 0; EB2_Q30_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q30_Status == 1) mes "赤蒼蠅 " + EB2_Q30_M1 + "/10。";
+                            else { if (BaseLevel < 55) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q30_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Geffen;
+
+                        case 2:
+                            mes "[擊殺綠腐屍] 目標：綠腐屍 10 隻，南瓜先生 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q31_CD) mes "冷卻中。";
+                            else if (EB2_Q31_Status == 2) { getexp 14800, 13660; EB2_Q31_Status = 0; EB2_Q31_M1 = 0; EB2_Q31_M2 = 0; EB2_Q31_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q31_Status == 1) mes "綠腐屍 " + EB2_Q31_M1 + "/10，南瓜先生 " + EB2_Q31_M2 + "/10。";
+                            else { if (BaseLevel < 55) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q31_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Geffen;
+
+                        case 3: goto L_Reg_5;
+                    }
+                    break;
+
+                case 3:
+                L_Sub_Comodo:
+                    .@now = gettimetick(2);
+                    if (.@now < EB2_Q32_CD) .@m32$ = "^777777【CD】^000000"; else if (EB2_Q32_Status == 2) .@m32$ = "^007700【可領賞】^000000"; else if (EB2_Q32_Status == 1) .@m32$ = "^0000FF【進行中】^000000"; else .@m32$ = "【接取】";
+                    .@m32$ = .@m32$ + "可愛的傢伙們 (Lv 60)";
+                    if (.@now < EB2_Q33_CD) .@m33$ = "^777777【CD】^000000"; else if (EB2_Q33_Status == 2) .@m33$ = "^007700【可領賞】^000000"; else if (EB2_Q33_Status == 1) .@m33$ = "^0000FF【進行中】^000000"; else .@m33$ = "【接取】";
+                    .@m33$ = .@m33$ + "呆板的傢伙們 (Lv 60)";
+                    if (.@now < EB2_Q34_CD) .@m34$ = "^777777【CD】^000000"; else if (EB2_Q34_Status == 2) .@m34$ = "^007700【可領賞】^000000"; else if (EB2_Q34_Status == 1) .@m34$ = "^0000FF【進行中】^000000"; else .@m34$ = "【接取】";
+                    .@m34$ = .@m34$ + "噁心的傢伙們 (Lv 60)";
+
+                    switch(select(.@m32$ + ":" + .@m33$ + ":" + .@m34$ + ":返回上一層")) {
+                        case 1:
+                            mes "[可愛的傢伙們] 目標：海豹寶寶 10 隻，海獺 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q32_CD) mes "冷卻中。";
+                            else if (EB2_Q32_Status == 2) { getexp 10000, 10000; EB2_Q32_Status = 0; EB2_Q32_M1 = 0; EB2_Q32_M2 = 0; EB2_Q32_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q32_Status == 1) mes "海豹寶寶 " + EB2_Q32_M1 + "/10，海獺 " + EB2_Q32_M2 + "/10。";
+                            else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q32_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Comodo;
+
+                        case 2:
+                            mes "[呆板的傢伙們] 目標：鐘乳巨石怪 10 隻，三葉蟲 5 隻，邪惡草艾 5 隻。"; next;
+                            if (gettimetick(2) < EB2_Q33_CD) mes "冷卻中。";
+                            else if (EB2_Q33_Status == 2) { getexp 20000, 20000; EB2_Q33_Status = 0; EB2_Q33_M1 = 0; EB2_Q33_M2 = 0; EB2_Q33_M3 = 0; EB2_Q33_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q33_Status == 1) mes "巨石怪 " + EB2_Q33_M1 + "/10，三葉蟲 " + EB2_Q33_M2 + "/5，邪惡草艾 " + EB2_Q33_M3 + "/5。";
+                            else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q33_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Comodo;
+
+                        case 3:
+                            mes "[噁心的傢伙們] 目標：綠變色龍 10 隻，鱷魚人 10 隻。"; next;
+                            if (gettimetick(2) < EB2_Q34_CD) mes "冷卻中。";
+                            else if (EB2_Q34_Status == 2) { getexp 15000, 15000; EB2_Q34_Status = 0; EB2_Q34_M1 = 0; EB2_Q34_M2 = 0; EB2_Q34_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
+                            else if (EB2_Q34_Status == 1) mes "綠變色龍 " + EB2_Q34_M1 + "/10，鱷魚人 " + EB2_Q34_M2 + "/10。";
+                            else { if (BaseLevel < 60) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q34_Status = 1; mes "已接取！"; } }
+                            next; goto L_Sub_Comodo;
+
+                        case 4: goto L_Reg_5;
+                    }
+                    break;
+
+                case 4: goto L_MainMenu;
+            }
+            break;
+
+        case 7: close;
+    }
+    end;
+
+// ==============================================================
+// 全域擊殺監聽核心 (自動更新任務計數與跳字提醒，僅限同畫面 20 格內隊友共享)
+// ==============================================================
+OnNPCKillEvent:
+    .@pid = getcharid(1);
+
+    if (!.@pid) {
+        callsub OnCheckTaskProgress, killedrid;
+        end;
+    }
+
+    .@killedrid = killedrid;
+    getpartymember .@pid, 1;
+    getpartymember .@pid, 2;
+    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC;
+
+    for (.@i = 0; .@i < $@partymembercount; ++.@i) {
+        if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
+            attachrid $@partymemberaid[.@i];
+            getmapxy .@map2$, .@x2, .@y2, UNITTYPE_PC;
+
+            if (.@map1$ == .@map2$ && distance(.@x1, .@y1, .@x2, .@y2) <= 20 && Hp > 0) {
+                callsub OnCheckTaskProgress, .@killedrid;
+            }
+        }
+    }
+    end;
+
+// --------------------------------------------------------------
+// 40~69 任務判定子程序 (全魔物 ID 準確校正版)
+// --------------------------------------------------------------
+OnCheckTaskProgress:
+    .@t = getarg(0);
+
+    // Q1: 邪骸海盜 (1071)
+    if (.@t == 1071 && EB2_Q1_Status == 1 && EB2_Q1_M1 < 20) {
+        EB2_Q1_M1++;
+        if (EB2_Q1_M1 >= 20) { EB2_Q1_Status = 2; dispbottom "【任務達成】拯救好友 完成！"; specialeffect2 438; }
+        else dispbottom "【拯救好友】邪骸海盜：(" + EB2_Q1_M1 + "/20)";
+    }
+    // Q2: 庫克雷 (1070)
+    if (.@t == 1070 && EB2_Q2_Status == 1 && EB2_Q2_M1 < 10) {
+        EB2_Q2_M1++;
+        if (EB2_Q2_M1 >= 10) { EB2_Q2_Status = 2; dispbottom "【任務達成】挖庫克雷肝吃 完成！"; specialeffect2 438; }
+        else dispbottom "【挖庫克雷肝吃】庫克雷：(" + EB2_Q2_M1 + "/10)";
+    }
+    // Q4: 海葵 (1068)
+    if (.@t == 1068 && EB2_Q4_Status == 1 && EB2_Q4_M1 < 10) {
+        EB2_Q4_M1++;
+        dispbottom "【掃蕩失事輪1樓】海葵：(" + EB2_Q4_M1 + "/10)";
+    }
+    // Q5: 白幽靈 (1117) + 迅捷彎刀海盜骷髏 (2676)
+    if (.@t == 1117 && EB2_Q5_Status == 1 && EB2_Q5_M1 < 10) {
+        EB2_Q5_M1++;
+        if (EB2_Q5_M1 >= 10 && EB2_Q5_M2 >= 1) { EB2_Q5_Status = 2; dispbottom "【任務達成】掃蕩失事輪2樓 完成！"; specialeffect2 438; }
+        else dispbottom "【掃蕩失事輪2樓】白幽靈(" + EB2_Q5_M1 + "/10) 迅捷海盜骷髏(" + EB2_Q5_M2 + "/1)";
+    }
+    if (.@t == 2676 && EB2_Q5_Status == 1 && EB2_Q5_M2 < 1) {
+        EB2_Q5_M2++;
+        if (EB2_Q5_M1 >= 10 && EB2_Q5_M2 >= 1) { EB2_Q5_Status = 2; dispbottom "【任務達成】掃蕩失事輪2樓 完成！"; specialeffect2 438; }
+        else dispbottom "【掃蕩失事輪2樓】白幽靈(" + EB2_Q5_M1 + "/10) 迅捷海盜骷髏(" + EB2_Q5_M2 + "/1)";
+    }
+    // Q6: 海星 (1266) + 卡拉蟹 (1073)
+    if (.@t == 1266 && EB2_Q6_Status == 1 && EB2_Q6_M1 < 10) {
+        EB2_Q6_M1++;
+        if (EB2_Q6_M1 >= 10 && EB2_Q6_M2 >= 10) { EB2_Q6_Status = 2; dispbottom "【任務達成】高尚的戰爭 完成！"; specialeffect2 438; }
+        else dispbottom "【高尚的戰爭】海星：(" + EB2_Q6_M1 + "/10)，卡拉蟹：(" + EB2_Q6_M2 + "/10)";
+    }
+    if (.@t == 1073 && EB2_Q6_Status == 1 && EB2_Q6_M2 < 10) {
+        EB2_Q6_M2++;
+        if (EB2_Q6_M1 >= 10 && EB2_Q6_M2 >= 10) { EB2_Q6_Status = 2; dispbottom "【任務達成】高尚的戰爭 完成！"; specialeffect2 438; }
+        else dispbottom "【高尚的戰爭】海星：(" + EB2_Q6_M1 + "/10)，卡拉蟹：(" + EB2_Q6_M2 + "/10)";
+    }
+    // Q7: 貝殼魔靈 (1074)
+    if (.@t == 1074 && EB2_Q7_Status == 1 && EB2_Q7_M1 < 10) {
+        EB2_Q7_M1++;
+        dispbottom "【採蛤蜊體驗】貝殼魔靈：(" + EB2_Q7_M1 + "/10)";
+    }
+    // Q8: 邪骸獸人 (1152) + 獸人腐屍 (1153)
+    if (.@t == 1152 && EB2_Q8_Status == 1 && EB2_Q8_M1 < 20) {
+        EB2_Q8_M1++;
+        if (EB2_Q8_M1 >= 20 && EB2_Q8_M2 >= 20) { EB2_Q8_Status = 2; dispbottom "【任務達成】該死的獸人 完成！"; specialeffect2 438; }
+        else dispbottom "【該死的獸人】邪骸獸人：(" + EB2_Q8_M1 + "/20)，獸人腐屍：(" + EB2_Q8_M2 + "/20)";
+    }
+    if (.@t == 1153 && EB2_Q8_Status == 1 && EB2_Q8_M2 < 20) {
+        EB2_Q8_M2++;
+        if (EB2_Q8_M1 >= 20 && EB2_Q8_M2 >= 20) { EB2_Q8_Status = 2; dispbottom "【任務達成】該死的獸人 完成！"; specialeffect2 438; }
+        else dispbottom "【該死的獸人】邪骸獸人：(" + EB2_Q8_M1 + "/20)，獸人腐屍：(" + EB2_Q8_M2 + "/20)";
+    }
+    // Q9: 茲諾克 (1177)
+    if (.@t == 1177 && EB2_Q9_Status == 1 && EB2_Q9_M1 < 20) {
+        EB2_Q9_M1++;
+        if (EB2_Q9_M1 >= 20) { EB2_Q9_Status = 2; dispbottom "【任務達成】食心鬼 完成！"; specialeffect2 438; }
+        else dispbottom "【食心鬼】茲諾克：(" + EB2_Q9_M1 + "/20)";
+    }
+    // Q10: 獸人戰士 (1023) + 女戰士 (1273) + 嬰兒 (1272)
+    if (.@t == 1023 && EB2_Q10_Status == 1 && EB2_Q10_M1 < 15) {
+        EB2_Q10_M1++;
+        if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
+        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+    }
+    if (.@t == 1273 && EB2_Q10_Status == 1 && EB2_Q10_M2 < 15) {
+        EB2_Q10_M2++;
+        if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
+        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+    }
+    if (.@t == 1272 && EB2_Q10_Status == 1 && EB2_Q10_M3 < 10) {
+        EB2_Q10_M3++;
+        if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
+        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+    }
+    // Q11: 大斧 (1122) + 鏈鋸 (1123)
+    if (.@t == 1122 && EB2_Q11_Status == 1 && EB2_Q11_M1 < 10) {
+        EB2_Q11_M1++;
+        if (EB2_Q11_M1 >= 10 && EB2_Q11_M2 >= 10) { EB2_Q11_Status = 2; dispbottom "【任務達成】整頓凶猛哥布靈 完成！"; specialeffect2 438; }
+        else dispbottom "【凶猛哥布靈】大斧(" + EB2_Q11_M1 + "/10) 鏈鋸(" + EB2_Q11_M2 + "/10)";
+    }
+    if (.@t == 1123 && EB2_Q11_Status == 1 && EB2_Q11_M2 < 10) {
+        EB2_Q11_M2++;
+        if (EB2_Q11_M1 >= 10 && EB2_Q11_M2 >= 10) { EB2_Q11_Status = 2; dispbottom "【任務達成】整頓凶猛哥布靈 完成！"; specialeffect2 438; }
+        else dispbottom "【凶猛哥布靈】大斧(" + EB2_Q11_M1 + "/10) 鏈鋸(" + EB2_Q11_M2 + "/10)";
+    }
+    // Q12: 榔頭 (1124) + 刺刀 (1125)
+    if (.@t == 1124 && EB2_Q12_Status == 1 && EB2_Q12_M1 < 10) {
+        EB2_Q12_M1++;
+        if (EB2_Q12_M1 >= 10 && EB2_Q12_M2 >= 10) { EB2_Q12_Status = 2; dispbottom "【任務達成】整頓敏捷哥布靈 完成！"; specialeffect2 438; }
+        else dispbottom "【敏捷哥布靈】榔頭(" + EB2_Q12_M1 + "/10) 刺刀(" + EB2_Q12_M2 + "/10)";
+    }
+    if (.@t == 1125 && EB2_Q12_Status == 1 && EB2_Q12_M2 < 10) {
+        EB2_Q12_M2++;
+        if (EB2_Q12_M1 >= 10 && EB2_Q12_M2 >= 10) { EB2_Q12_Status = 2; dispbottom "【任務達成】整頓敏捷哥布靈 完成！"; specialeffect2 438; }
+        else dispbottom "【敏捷哥布靈】榔頭(" + EB2_Q12_M1 + "/10) 刺刀(" + EB2_Q12_M2 + "/10)";
+    }
+    // Q13: 弓箭 (1126) + 刺錘 (1258)
+    if (.@t == 1126 && EB2_Q13_Status == 1 && EB2_Q13_M1 < 10) {
+        EB2_Q13_M1++;
+        if (EB2_Q13_M1 >= 10 && EB2_Q13_M2 >= 10) { EB2_Q13_Status = 2; dispbottom "【任務達成】為難的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【為難的傢伙們】弓箭(" + EB2_Q13_M1 + "/10) 刺錘(" + EB2_Q13_M2 + "/10)";
+    }
+    if (.@t == 1258 && EB2_Q13_Status == 1 && EB2_Q13_M2 < 10) {
+        EB2_Q13_M2++;
+        if (EB2_Q13_M1 >= 10 && EB2_Q13_M2 >= 10) { EB2_Q13_Status = 2; dispbottom "【任務達成】為難的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【為難的傢伙們】弓箭(" + EB2_Q13_M1 + "/10) 刺錘(" + EB2_Q13_M2 + "/10)";
+    }
+    // Q14: 魔鍋蛋 (1138) + 重金屬蝗蟲 (1058)
+    if (.@t == 1138 && EB2_Q14_Status == 1 && EB2_Q14_M1 < 10) {
+        EB2_Q14_M1++;
+        if (EB2_Q14_M1 >= 10 && EB2_Q14_M2 >= 10) { EB2_Q14_Status = 2; dispbottom "【任務達成】雞蛋和蝦蜢 完成！"; specialeffect2 438; }
+        else dispbottom "【雞蛋和蝦蜢】魔鍋蛋(" + EB2_Q14_M1 + "/10) 重金屬蝗蟲(" + EB2_Q14_M2 + "/10)";
+    }
+    if (.@t == 1058 && EB2_Q14_Status == 1 && EB2_Q14_M2 < 10) {
+        EB2_Q14_M2++;
+        if (EB2_Q14_M1 >= 10 && EB2_Q14_M2 >= 10) { EB2_Q14_Status = 2; dispbottom "【任務達成】雞蛋和蝦蜢 完成！"; specialeffect2 438; }
+        else dispbottom "【雞蛋和蝦蜢】魔鍋蛋(" + EB2_Q14_M1 + "/10) 重金屬蝗蟲(" + EB2_Q14_M2 + "/10)";
+    }
+    // Q15: 水母 (1141) + 漂浮蟲 (1161)
+    if (.@t == 1141 && EB2_Q15_Status == 1 && EB2_Q15_M1 < 10) {
+        EB2_Q15_M1++;
+        dispbottom "【生物學採樣】水母：(" + EB2_Q15_M1 + "/10)，漂浮蟲：(" + EB2_Q15_M2 + "/10)";
+    }
+    if (.@t == 1161 && EB2_Q15_Status == 1 && EB2_Q15_M2 < 10) {
+        EB2_Q15_M2++;
+        dispbottom "【生物學採樣】水母：(" + EB2_Q15_M1 + "/10)，漂浮蟲：(" + EB2_Q15_M2 + "/10)";
+    }
+    // Q16: 螃蟹 (1066)
+    if (.@t == 1066 && EB2_Q16_Status == 1 && EB2_Q16_M1 < 10) {
+        EB2_Q16_M1++;
+        dispbottom "【進水時要划槳】螃蟹：(" + EB2_Q16_M1 + "/10)";
+    }
+    // Q17: 異變魚 (1069) + 馬克 (1063)
+    if (.@t == 1069 && EB2_Q17_Status == 1 && EB2_Q17_M1 < 10) {
+        EB2_Q17_M1++;
+        if (EB2_Q17_M1 >= 10 && EB2_Q17_M2 >= 10) { EB2_Q17_Status = 2; dispbottom "【任務達成】對好友的關懷 完成！"; specialeffect2 438; }
+        else dispbottom "【對好友的關懷】異變魚(" + EB2_Q17_M1 + "/10) 馬克(" + EB2_Q17_M2 + "/10)";
+    }
+    if (.@t == 1063 && EB2_Q17_Status == 1 && EB2_Q17_M2 < 10) {
+        EB2_Q17_M2++;
+        if (EB2_Q17_M1 >= 10 && EB2_Q17_M2 >= 10) { EB2_Q17_Status = 2; dispbottom "【任務達成】對好友的關懷 完成！"; specialeffect2 438; }
+        else dispbottom "【對好友的關懷】異變魚(" + EB2_Q17_M1 + "/10) 馬克(" + EB2_Q17_M2 + "/10)";
+    }
+    // Q18: 烏賊 (1144)
+    if (.@t == 1144 && EB2_Q18_Status == 1 && EB2_Q18_M1 < 20) {
+        EB2_Q18_M1++;
+        dispbottom "【採購料理食材】烏賊：(" + EB2_Q18_M1 + "/20)";
+    }
+    // Q19: 人魚 (1044)
+    if (.@t == 1044 && EB2_Q19_Status == 1 && EB2_Q19_M1 < 10) {
+        EB2_Q19_M1++;
+        dispbottom "【幻想裡的女人】人魚：(" + EB2_Q19_M1 + "/10)";
+    }
+    // Q20: 海神 (1065) + 人魚士兵 (1264)
+    if (.@t == 1065 && EB2_Q20_Status == 1 && EB2_Q20_M1 < 10) {
+        EB2_Q20_M1++;
+        if (EB2_Q20_M1 >= 10 && EB2_Q20_M2 >= 10) { EB2_Q20_Status = 2; dispbottom "【任務達成】煩人的守衛 完成！"; specialeffect2 438; }
+        else dispbottom "【煩人的守衛】海神(" + EB2_Q20_M1 + "/10) 人魚士兵(" + EB2_Q20_M2 + "/10)";
+    }
+    if (.@t == 1264 && EB2_Q20_Status == 1 && EB2_Q20_M2 < 10) {
+        EB2_Q20_M2++;
+        if (EB2_Q20_M1 >= 10 && EB2_Q20_M2 >= 10) { EB2_Q20_Status = 2; dispbottom "【任務達成】煩人的守衛 完成！"; specialeffect2 438; }
+        else dispbottom "【煩人的守衛】海神(" + EB2_Q20_M1 + "/10) 人魚士兵(" + EB2_Q20_M2 + "/10)";
+    }
+    // Q21: 木乃伊 (1041)
+    if (.@t == 1041 && EB2_Q21_Status == 1 && EB2_Q21_M1 < 10) {
+        EB2_Q21_M1++;
+        dispbottom "【木乃伊和藍色箱子】木乃伊：(" + EB2_Q21_M1 + "/10)";
+    }
+    // Q22: 木乃伊犬 (1151) + 米洛斯 (1149)
+    if (.@t == 1151 && EB2_Q22_Status == 1 && EB2_Q22_M1 < 10) {
+        EB2_Q22_M1++;
+        if (EB2_Q22_M1 >= 10 && EB2_Q22_M2 >= 10) { EB2_Q22_Status = 2; dispbottom "【任務達成】無法入睡 完成！"; specialeffect2 438; }
+        else dispbottom "【無法入睡】木乃伊犬(" + EB2_Q22_M1 + "/10) 米洛斯(" + EB2_Q22_M2 + "/10)";
+    }
+    if (.@t == 1149 && EB2_Q22_Status == 1 && EB2_Q22_M2 < 10) {
+        EB2_Q22_M2++;
+        if (EB2_Q22_M1 >= 10 && EB2_Q22_M2 >= 10) { EB2_Q22_Status = 2; dispbottom "【任務達成】無法入睡 完成！"; specialeffect2 438; }
+        else dispbottom "【無法入睡】木乃伊犬(" + EB2_Q22_M1 + "/10) 米洛斯(" + EB2_Q22_M2 + "/10)";
+    }
+    // Q23: 蛇女伊絲 (1139)
+    if (.@t == 1139 && EB2_Q23_Status == 1 && EB2_Q23_M1 < 20) {
+        EB2_Q23_M1++;
+        if (EB2_Q23_M1 >= 20) { EB2_Q23_Status = 2; dispbottom "【任務達成】擊殺蛇女伊絲 完成！"; specialeffect2 438; }
+        else dispbottom "【擊殺蛇女伊絲】蛇女伊絲：(" + EB2_Q23_M1 + "/20)";
+    }
+    // Q24: 傑洛米 (1178) + 諾可伊 (1164)
+    if (.@t == 1178 && EB2_Q24_Status == 1 && EB2_Q24_M1 < 15) {
+        EB2_Q24_M1++;
+        if (EB2_Q24_M1 >= 15 && EB2_Q24_M2 >= 15) { EB2_Q24_Status = 2; dispbottom "【任務達成】人面獅身像的工人們 完成！"; specialeffect2 438; }
+        else dispbottom "【工人們】傑洛米(" + EB2_Q24_M1 + "/15) 諾可伊(" + EB2_Q24_M2 + "/15)";
+    }
+    if (.@t == 1164 && EB2_Q24_Status == 1 && EB2_Q24_M2 < 15) {
+        EB2_Q24_M2++;
+        if (EB2_Q24_M1 >= 15 && EB2_Q24_M2 >= 15) { EB2_Q24_Status = 2; dispbottom "【任務達成】人面獅身像的工人們 完成！"; specialeffect2 438; }
+        else dispbottom "【工人們】傑洛米(" + EB2_Q24_M1 + "/15) 諾可伊(" + EB2_Q24_M2 + "/15)";
+    }
+    // Q25: 馬爾杜克 (1140) + 帕莎納 (1154)
+    if (.@t == 1140 && EB2_Q25_Status == 1 && EB2_Q25_M1 < 15) {
+        EB2_Q25_M1++;
+        dispbottom "【人面獅身像的秘密】馬爾杜克：(" + EB2_Q25_M1 + "/15)";
+    }
+    if (.@t == 1154 && EB2_Q25_Status == 1 && EB2_Q25_M2 < 15) {
+        EB2_Q25_M2++;
+        dispbottom "【人面獅身像的秘密】帕莎納：(" + EB2_Q25_M2 + "/15)";
+    }
+    // Q26: 泥人 (1165)
+    if (.@t == 1165 && EB2_Q26_Status == 1 && EB2_Q26_M1 < 10) {
+        EB2_Q26_M1++;
+        dispbottom "【阻撓前程的傢伙們】泥人：(" + EB2_Q26_M1 + "/10)";
+    }
+    // Q27: 殭屍 (1026) + 妖道 (1188)
+    if (.@t == 1026 && EB2_Q27_Status == 1 && EB2_Q27_M1 < 15) {
+        EB2_Q27_M1++;
+        dispbottom "【淨化靈魂儀式】殭屍：(" + EB2_Q27_M1 + "/15)";
+    }
+    if (.@t == 1188 && EB2_Q27_Status == 1 && EB2_Q27_M2 < 15) {
+        EB2_Q27_M2++;
+        dispbottom "【淨化靈魂儀式】妖道：(" + EB2_Q27_M2 + "/15)";
+    }
+    // Q28: 鬼火 (1129)
+    if (.@t == 1129 && EB2_Q28_Status == 1 && EB2_Q28_M1 < 10) {
+        EB2_Q28_M1++;
+        if (EB2_Q28_M1 >= 10) { EB2_Q28_Status = 2; dispbottom "【任務達成】用一杯酒撫慰悲傷 完成！"; specialeffect2 438; }
+        else dispbottom "【撫慰悲傷】鬼火：(" + EB2_Q28_M1 + "/10)";
+    }
+    // Q29: 鬼女 (1170)
+    if (.@t == 1170 && EB2_Q29_Status == 1 && EB2_Q29_M1 < 12) {
+        EB2_Q29_M1++;
+        dispbottom "【魔法的蹤跡】鬼女：(" + EB2_Q29_M1 + "/12)";
+    }
+    // Q30: 赤蒼蠅 (1107)
+    if (.@t == 1107 && EB2_Q30_Status == 1 && EB2_Q30_M1 < 10) {
+        EB2_Q30_M1++;
+        if (EB2_Q30_M1 >= 10) { EB2_Q30_Status = 2; dispbottom "【任務達成】擊殺赤蒼蠅 完成！"; specialeffect2 438; }
+        else dispbottom "【擊殺赤蒼蠅】赤蒼蠅：(" + EB2_Q30_M1 + "/10)";
+    }
+    // Q31: 綠腐屍 (1036) + 南瓜先生 (1130)
+    if (.@t == 1036 && EB2_Q31_Status == 1 && EB2_Q31_M1 < 10) {
+        EB2_Q31_M1++;
+        if (EB2_Q31_M1 >= 10 && EB2_Q31_M2 >= 10) { EB2_Q31_Status = 2; dispbottom "【任務達成】擊殺綠腐屍 完成！"; specialeffect2 438; }
+        else dispbottom "【擊殺綠腐屍】綠腐屍(" + EB2_Q31_M1 + "/10) 南瓜先生(" + EB2_Q31_M2 + "/10)";
+    }
+    if (.@t == 1130 && EB2_Q31_Status == 1 && EB2_Q31_M2 < 10) {
+        EB2_Q31_M2++;
+        if (EB2_Q31_M1 >= 10 && EB2_Q31_M2 >= 10) { EB2_Q31_Status = 2; dispbottom "【任務達成】擊殺綠腐屍 完成！"; specialeffect2 438; }
+        else dispbottom "【擊殺綠腐屍】綠腐屍(" + EB2_Q31_M1 + "/10) 南瓜先生(" + EB2_Q31_M2 + "/10)";
+    }
+    // Q32: 海豹寶寶 (1317) + 海獺 (1323)
+    if (.@t == 1317 && EB2_Q32_Status == 1 && EB2_Q32_M1 < 10) {
+        EB2_Q32_M1++;
+        if (EB2_Q32_M1 >= 10 && EB2_Q32_M2 >= 10) { EB2_Q32_Status = 2; dispbottom "【任務達成】可愛的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【可愛的傢伙們】海豹寶寶(" + EB2_Q32_M1 + "/10) 海獺(" + EB2_Q32_M2 + "/10)";
+    }
+    if (.@t == 1323 && EB2_Q32_Status == 1 && EB2_Q32_M2 < 10) {
+        EB2_Q32_M2++;
+        if (EB2_Q32_M1 >= 10 && EB2_Q32_M2 >= 10) { EB2_Q32_Status = 2; dispbottom "【任務達成】可愛的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【可愛的傢伙們】海豹寶寶(" + EB2_Q32_M1 + "/10) 海獺(" + EB2_Q32_M2 + "/10)";
+    }
+    // Q33: 鐘乳巨石怪 (1278) + 三葉蟲 (1279) + 邪惡草艾 (1274)
+    if (.@t == 1278 && EB2_Q33_Status == 1 && EB2_Q33_M1 < 10) {
+        EB2_Q33_M1++;
+        if (EB2_Q33_M1 >= 10 && EB2_Q33_M2 >= 5 && EB2_Q33_M3 >= 5) { EB2_Q33_Status = 2; dispbottom "【任務達成】呆板的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【呆板的傢伙們】巨石怪(" + EB2_Q33_M1 + "/10) 三葉蟲(" + EB2_Q33_M2 + "/5) 邪惡草艾(" + EB2_Q33_M3 + "/5)";
+    }
+    if (.@t == 1279 && EB2_Q33_Status == 1 && EB2_Q33_M2 < 5) {
+        EB2_Q33_M2++;
+        if (EB2_Q33_M1 >= 10 && EB2_Q33_M2 >= 5 && EB2_Q33_M3 >= 5) { EB2_Q33_Status = 2; dispbottom "【任務達成】呆板的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【呆板的傢伙們】巨石怪(" + EB2_Q33_M1 + "/10) 三葉蟲(" + EB2_Q33_M2 + "/5) 邪惡草艾(" + EB2_Q33_M3 + "/5)";
+    }
+    if (.@t == 1274 && EB2_Q33_Status == 1 && EB2_Q33_M3 < 5) {
+        EB2_Q33_M3++;
+        if (EB2_Q33_M1 >= 10 && EB2_Q33_M2 >= 5 && EB2_Q33_M3 >= 5) { EB2_Q33_Status = 2; dispbottom "【任務達成】呆板的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【呆板的傢伙們】巨石怪(" + EB2_Q33_M1 + "/10) 三葉蟲(" + EB2_Q33_M2 + "/5) 邪惡草艾(" + EB2_Q33_M3 + "/5)";
+    }
+    // Q34: 綠變色龍 (1687) + 鱷魚人 (1271)
+    if (.@t == 1687 && EB2_Q34_Status == 1 && EB2_Q34_M1 < 10) {
+        EB2_Q34_M1++;
+        if (EB2_Q34_M1 >= 10 && EB2_Q34_M2 >= 10) { EB2_Q34_Status = 2; dispbottom "【任務達成】噁心的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【噁心的傢伙們】綠變色龍(" + EB2_Q34_M1 + "/10) 鱷魚人(" + EB2_Q34_M2 + "/10)";
+    }
+    if (.@t == 1271 && EB2_Q34_Status == 1 && EB2_Q34_M2 < 10) {
+        EB2_Q34_M2++;
+        if (EB2_Q34_M1 >= 10 && EB2_Q34_M2 >= 10) { EB2_Q34_Status = 2; dispbottom "【任務達成】噁心的傢伙們 完成！"; specialeffect2 438; }
+        else dispbottom "【噁心的傢伙們】綠變色龍(" + EB2_Q34_M1 + "/10) 鱷魚人(" + EB2_Q34_M2 + "/10)";
+    }
+
+    return;
+}
