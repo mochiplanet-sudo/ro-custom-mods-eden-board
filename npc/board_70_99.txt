@@ -851,14 +851,14 @@ OnCheckTaskProgress:
         if (EB3_Q4_M1 >= 20 && EB3_Q4_M2 >= 15) { EB3_Q4_Status = 2; dispbottom "【任務達成】掃蕩鐘塔 1樓 完成！"; specialeffect2 438; }
         else dispbottom "【掃蕩鐘塔】魔書(" + EB3_Q4_M1 + "/20) 朽魔(" + EB3_Q4_M2 + "/15)";
     }
-    // Q5: 古鐘魔 (1193)
-    if (.@t == 1193 && EB3_Q5_Status == 1 && EB3_Q5_M1 < 15) {
+    // Q5: 古鐘魔 (1269)
+    if (.@t == 1269 && EB3_Q5_Status == 1 && EB3_Q5_M1 < 15) {
         EB3_Q5_M1++;
         if (EB3_Q5_M1 >= 15) { EB3_Q5_Status = 2; dispbottom "【任務達成】活生生的錶 1 完成！"; specialeffect2 438; }
         else dispbottom "【活生生的錶 1】古鐘魔：(" + EB3_Q5_M1 + "/15)";
     }
-    // Q6: 鐘怪 (1269)
-    if (.@t == 1269 && EB3_Q6_Status == 1 && EB3_Q6_M1 < 20) {
+    // Q6: 鐘怪 (1193)
+    if (.@t == 1193 && EB3_Q6_Status == 1 && EB3_Q6_M1 < 20) {
         EB3_Q6_M1++;
         if (EB3_Q6_M1 >= 20) { EB3_Q6_Status = 2; dispbottom "【任務達成】活生生的錶 2 完成！"; specialeffect2 438; }
         else dispbottom "【活生生的錶 2】鐘怪：(" + EB3_Q6_M1 + "/20)";
@@ -869,13 +869,13 @@ OnCheckTaskProgress:
         if (EB3_Q7_M1 >= 20) { EB3_Q7_Status = 2; dispbottom "【任務達成】來自地下的笑聲 完成！"; specialeffect2 438; }
         else dispbottom "【來自地下的笑聲】巫婆：(" + EB3_Q7_M1 + "/20)";
     }
-    // Q8: 惡靈 (1192) + 闇神官 (1198)
+    // Q8: 惡靈 (1192) + 闇神官 (1117)
     if (.@t == 1192 && EB3_Q8_Status == 1 && EB3_Q8_M1 < 15) {
         EB3_Q8_M1++;
         if (EB3_Q8_M1 >= 15 && EB3_Q8_M2 >= 15) { EB3_Q8_Status = 2; dispbottom "【任務達成】淨化修道院 完成！"; specialeffect2 438; }
         else dispbottom "【淨化修道院】惡靈(" + EB3_Q8_M1 + "/15) 闇神官(" + EB3_Q8_M2 + "/15)";
     }
-    if (.@t == 1198 && EB3_Q8_Status == 1 && EB3_Q8_M2 < 15) {
+    if (.@t == 1117 && EB3_Q8_Status == 1 && EB3_Q8_M2 < 15) {
         EB3_Q8_M2++;
         if (EB3_Q8_M1 >= 15 && EB3_Q8_M2 >= 15) { EB3_Q8_Status = 2; dispbottom "【任務達成】淨化修道院 完成！"; specialeffect2 438; }
         else dispbottom "【淨化修道院】惡靈(" + EB3_Q8_M1 + "/15) 闇神官(" + EB3_Q8_M2 + "/15)";
@@ -914,14 +914,14 @@ OnCheckTaskProgress:
         if (EB3_Q12_M1 >= 10) { EB3_Q12_Status = 2; dispbottom "【任務達成】惡劣審訊官 完成！"; specialeffect2 438; }
         else dispbottom "【惡劣審訊官】瑞比歐：(" + EB3_Q12_M1 + "/10)";
     }
-    // Q13: 畢帝特飛龍 (1169)
-    if (.@t == 1169 && EB3_Q13_Status == 1 && EB3_Q13_M1 < 10) {
+    // Q13: 畢帝特飛龍 (1156)
+    if (.@t == 1156 && EB3_Q13_Status == 1 && EB3_Q13_M1 < 10) {
         EB3_Q13_M1++;
         if (EB3_Q13_M1 >= 10) { EB3_Q13_Status = 2; dispbottom "【任務達成】畢帝特飛龍卡哇伊 完成！"; specialeffect2 438; }
         else dispbottom "【畢帝特飛龍】飛龍：(" + EB3_Q13_M1 + "/10)";
     }
-    // Q14: 畢帝特地龍 (1168)
-    if (.@t == 1168 && EB3_Q14_Status == 1 && EB3_Q14_M1 < 10) {
+    // Q14: 畢帝特地龍 (1155)
+    if (.@t == 1155 && EB3_Q14_Status == 1 && EB3_Q14_M1 < 10) {
         EB3_Q14_M1++;
         if (EB3_Q14_M1 >= 10) { EB3_Q14_Status = 2; dispbottom "【任務達成】畢帝特地龍卡哇伊 完成！"; specialeffect2 438; }
         else dispbottom "【畢帝特地龍】地龍：(" + EB3_Q14_M1 + "/10)";
@@ -989,20 +989,20 @@ OnCheckTaskProgress:
         EB3_Q23_M1++;
         dispbottom "【跳跳礦石魔】礦石魔：(" + EB3_Q23_M1 + "/15)，黑曜石：(" + countitem(7315) + "/5)";
     }
-    // Q24: 草精 (1779)
-    if (.@t == 1779 && EB3_Q24_Status == 1 && EB3_Q24_M1 < 20) {
+    // Q24: 草精 (1162)
+    if (.@t == 1162 && EB3_Q24_Status == 1 && EB3_Q24_M1 < 20) {
         EB3_Q24_M1++;
         if (EB3_Q24_M1 >= 20) { EB3_Q24_Status = 2; dispbottom "【任務達成】大的游泳池 完成！"; specialeffect2 438; }
         else dispbottom "【大的游泳池】草精：(" + EB3_Q24_M1 + "/20)";
     }
-    // Q25: 灰森靈 (1780)
-    if (.@t == 1780 && EB3_Q25_Status == 1 && EB3_Q25_M1 < 20) {
+    // Q25: 灰森靈 (1215)
+    if (.@t == 1215 && EB3_Q25_Status == 1 && EB3_Q25_M1 < 20) {
         EB3_Q25_M1++;
         if (EB3_Q25_M1 >= 20) { EB3_Q25_Status = 2; dispbottom "【任務達成】輕拍腳踝 完成！"; specialeffect2 438; }
         else dispbottom "【輕拍腳踝】灰森靈：(" + EB3_Q25_M1 + "/20)";
     }
-    // Q26: 微風 (1676)
-    if (.@t == 1676 && EB3_Q26_Status == 1 && EB3_Q26_M1 < 20) {
+    // Q26: 微風 (1692)
+    if (.@t == 1692 && EB3_Q26_Status == 1 && EB3_Q26_M1 < 20) {
         EB3_Q26_M1++;
         if (EB3_Q26_M1 >= 20) { EB3_Q26_Status = 2; dispbottom "【任務達成】以死神的峽谷之名 完成！"; specialeffect2 438; }
         else dispbottom "【死神峽谷】微風：(" + EB3_Q26_M1 + "/20)";
@@ -1018,13 +1018,13 @@ OnCheckTaskProgress:
         if (EB3_Q27_M1 >= 10 && EB3_Q27_M2 >= 10) { EB3_Q27_Status = 2; dispbottom "【任務達成】龜島之旅 完成！"; specialeffect2 438; }
         else dispbottom "【龜島之旅】刺尾蜻蜓(" + EB3_Q27_M1 + "/10) 彈簧兔(" + EB3_Q27_M2 + "/10)";
     }
-    // Q28: 岩石龜 (1314) + 果樹龜 (1316) + 水靈龜 (1319) + 火焰龜 (1318)
-    if (.@t == 1314 && EB3_Q28_Status == 1 && EB3_Q28_M1 < 10) {
+    // Q28: 岩石龜 (1316) + 果樹龜 (1314) + 水靈龜 (1319) + 火焰龜 (1318)
+    if (.@t == 1316 && EB3_Q28_Status == 1 && EB3_Q28_M1 < 10) {
         EB3_Q28_M1++;
         if (EB3_Q28_M1 >= 10 && EB3_Q28_M2 >= 10 && EB3_Q28_M3 >= 10 && EB3_Q28_M4 >= 10) { EB3_Q28_Status = 2; dispbottom "【任務達成】擊殺烏龜群 完成！"; specialeffect2 438; }
         else dispbottom "【烏龜群】岩石(" + EB3_Q28_M1 + "/10) 果樹(" + EB3_Q28_M2 + "/10) 水靈(" + EB3_Q28_M3 + "/10) 火焰(" + EB3_Q28_M4 + "/10)";
     }
-    if (.@t == 1316 && EB3_Q28_Status == 1 && EB3_Q28_M2 < 10) {
+    if (.@t == 1314 && EB3_Q28_Status == 1 && EB3_Q28_M2 < 10) {
         EB3_Q28_M2++;
         if (EB3_Q28_M1 >= 10 && EB3_Q28_M2 >= 10 && EB3_Q28_M3 >= 10 && EB3_Q28_M4 >= 10) { EB3_Q28_Status = 2; dispbottom "【任務達成】擊殺烏龜群 完成！"; specialeffect2 438; }
         else dispbottom "【烏龜群】岩石(" + EB3_Q28_M1 + "/10) 果樹(" + EB3_Q28_M2 + "/10) 水靈(" + EB3_Q28_M3 + "/10) 火焰(" + EB3_Q28_M4 + "/10)";
@@ -1063,8 +1063,8 @@ OnCheckTaskProgress:
         if (EB3_Q32_M1 >= 20) { EB3_Q32_Status = 2; dispbottom "【任務達成】無頭騾 完成！"; specialeffect2 438; }
         else dispbottom "【無頭騾】無頭騾：(" + EB3_Q32_M1 + "/20)";
     }
-    // Q33: 樹林女巫 (1881)
-    if (.@t == 1881 && EB3_Q33_Status == 1 && EB3_Q33_M1 < 20) {
+    // Q33: 樹林女巫 (1883)
+    if (.@t == 1883 && EB3_Q33_Status == 1 && EB3_Q33_M1 < 20) {
         EB3_Q33_M1++;
         if (EB3_Q33_M1 >= 20) { EB3_Q33_Status = 2; dispbottom "【任務達成】莫斯科比亞的惡夢 完成！"; specialeffect2 438; }
         else dispbottom "【莫斯科比亞】樹林女巫：(" + EB3_Q33_M1 + "/20)";
@@ -1128,42 +1128,42 @@ OnCheckTaskProgress:
         if (EB3_Q42_M1 >= 20) { EB3_Q42_Status = 2; dispbottom "【任務達成】雲上的老人 完成！"; specialeffect2 438; }
         else dispbottom "【雲上的老人】惡雲仙人：(" + EB3_Q42_M1 + "/20)";
     }
-    // Q43: 邪惡向日葵 (1988) + 螳螂 (1133)
-    if (.@t == 1988 && EB3_Q43_Status == 1 && EB3_Q43_M1 < 10) {
+    // Q43: 邪惡向日葵 (1368) + 螳螂 (1139)
+    if (.@t == 1368 && EB3_Q43_Status == 1 && EB3_Q43_M1 < 10) {
         EB3_Q43_M1++;
         if (EB3_Q43_M1 >= 10 && EB3_Q43_M2 >= 10) { EB3_Q43_Status = 2; dispbottom "【任務達成】國界檢查站的工作 完成！"; specialeffect2 438; }
         else dispbottom "【國界檢查站】向日葵(" + EB3_Q43_M1 + "/10) 螳螂(" + EB3_Q43_M2 + "/10)";
     }
-    if (.@t == 1133 && EB3_Q43_Status == 1 && EB3_Q43_M2 < 10) {
+    if (.@t == 1139 && EB3_Q43_Status == 1 && EB3_Q43_M2 < 10) {
         EB3_Q43_M2++;
         if (EB3_Q43_M1 >= 10 && EB3_Q43_M2 >= 10) { EB3_Q43_Status = 2; dispbottom "【任務達成】國界檢查站的工作 完成！"; specialeffect2 438; }
         else dispbottom "【國界檢查站】向日葵(" + EB3_Q43_M1 + "/10) 螳螂(" + EB3_Q43_M2 + "/10)";
     }
-    // Q44: 黃諾博斯 (1629) + 紅諾博斯 (1630)
-    if (.@t == 1629 && EB3_Q44_Status == 1 && EB3_Q44_M1 < 10) {
+    // Q44: 黃諾博斯 (1718) + 紅諾博斯 (1715)
+    if (.@t == 1718 && EB3_Q44_Status == 1 && EB3_Q44_M1 < 10) {
         EB3_Q44_M1++;
         if (EB3_Q44_M1 >= 10 && EB3_Q44_M2 >= 10) { EB3_Q44_Status = 2; dispbottom "【任務達成】水管故障的元兇 完成！"; specialeffect2 438; }
         else dispbottom "【水管元兇】黃諾博斯(" + EB3_Q44_M1 + "/10) 紅諾博斯(" + EB3_Q44_M2 + "/10)";
     }
-    if (.@t == 1630 && EB3_Q44_Status == 1 && EB3_Q44_M2 < 10) {
+    if (.@t == 1715 && EB3_Q44_Status == 1 && EB3_Q44_M2 < 10) {
         EB3_Q44_M2++;
         if (EB3_Q44_M1 >= 10 && EB3_Q44_M2 >= 10) { EB3_Q44_Status = 2; dispbottom "【任務達成】水管故障的元兇 完成！"; specialeffect2 438; }
         else dispbottom "【水管元兇】黃諾博斯(" + EB3_Q44_M1 + "/10) 紅諾博斯(" + EB3_Q44_M2 + "/10)";
     }
-    // Q45: 土狼 (支援 1220 與 1106)
-    if ((.@t == 1220 || .@t == 1106) && EB3_Q45_Status == 1 && EB3_Q45_M1 < 30) {
+    // Q45: 土狼 (1782)
+    if (.@t == 1782 && EB3_Q45_Status == 1 && EB3_Q45_M1 < 30) {
         EB3_Q45_M1++;
         if (EB3_Q45_M1 >= 30) { EB3_Q45_Status = 2; dispbottom "【任務達成】和平的朝聖旅行 完成！"; specialeffect2 438; }
         else dispbottom "【朝聖旅行】土狼：(" + EB3_Q45_M1 + "/30)";
     }
-    // Q46: 小雪獸 (1777)
-    if (.@t == 1777 && EB3_Q46_Status == 1 && EB3_Q46_M1 < 30) {
+    // Q46: 小雪獸 (1776)
+    if (.@t == 1776 && EB3_Q46_Status == 1 && EB3_Q46_M1 < 30) {
         EB3_Q46_M1++;
         if (EB3_Q46_M1 >= 30) { EB3_Q46_Status = 2; dispbottom "【任務達成】美麗的守護者 完成！"; specialeffect2 438; }
         else dispbottom "【美麗的守護者】小雪獸：(" + EB3_Q46_M1 + "/30)";
     }
-    // Q47: 石頭波利 (1778)
-    if (.@t == 1778 && EB3_Q47_Status == 1 && EB3_Q47_M1 < 30) {
+    // Q47: 石頭波利 (1784)
+    if (.@t == 1784 && EB3_Q47_Status == 1 && EB3_Q47_M1 < 30) {
         EB3_Q47_M1++;
         if (EB3_Q47_M1 >= 30) { EB3_Q47_Status = 2; dispbottom "【任務達成】吞下石頭的石頭 完成！"; specialeffect2 438; }
         else dispbottom "【吞下石頭】石頭波利：(" + EB3_Q47_M1 + "/30)";
