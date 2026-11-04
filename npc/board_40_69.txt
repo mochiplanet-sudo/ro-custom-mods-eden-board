@@ -294,7 +294,7 @@ L_MainMenu:
                     mes "[獸人-一網打盡大作戰] 目標：獸人戰士 15 隻，獸人女戰士 15 隻，獸人嬰兒 10 隻。"; next;
                     if (gettimetick(2) < EB2_Q10_CD) mes "冷卻中。";
                     else if (EB2_Q10_Status == 2) { getexp 23520, 24300; EB2_Q10_Status = 0; EB2_Q10_M1 = 0; EB2_Q10_M2 = 0; EB2_Q10_M3 = 0; EB2_Q10_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
-                    else if (EB2_Q10_Status == 1) mes "戰士 " + EB2_Q10_M1 + "/15，女戰士 " + EB2_Q10_M2 + "/15，嬰兒 " + EB2_Q10_M3 + "/10。";
+                    else if (EB2_Q10_Status == 1) mes "獸人戰士 " + EB2_Q10_M1 + "/15，女戰士 " + EB2_Q10_M2 + "/15，獸人嬰兒 " + EB2_Q10_M3 + "/10。";
                     else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q10_Status = 1; mes "已接取！"; } }
                     next; goto L_Reg_2;
 
@@ -310,10 +310,10 @@ L_MainMenu:
 
                     switch(select(.@m11$ + ":" + .@m12$ + ":" + .@m13$ + ":返回上一層")) {
                         case 1:
-                            mes "[整頓凶猛哥布靈] 目標：大斧哥布靈 10 隻，鏈鋸哥布靈 10 隻。"; next;
+                            mes "[整頓凶猛哥布靈] 目標：大斧哥布靈 10 隻，鏈錘哥布靈 10 隻。"; next;
                             if (gettimetick(2) < EB2_Q11_CD) mes "冷卻中。";
                             else if (EB2_Q11_Status == 2) { getexp 13000, 8200; EB2_Q11_Status = 0; EB2_Q11_M1 = 0; EB2_Q11_M2 = 0; EB2_Q11_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
-                            else if (EB2_Q11_Status == 1) mes "大斧 " + EB2_Q11_M1 + "/10，鏈鋸 " + EB2_Q11_M2 + "/10。";
+                            else if (EB2_Q11_Status == 1) mes "大斧哥布靈 " + EB2_Q11_M1 + "/10，鏈錘哥布靈 " + EB2_Q11_M2 + "/10。";
                             else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q11_Status = 1; mes "已接取！"; } }
                             next; goto L_Reg_Goblin;
 
@@ -321,7 +321,7 @@ L_MainMenu:
                             mes "[整頓敏捷哥布靈] 目標：榔頭哥布靈 10 隻，刺刀哥布靈 10 隻。"; next;
                             if (gettimetick(2) < EB2_Q12_CD) mes "冷卻中。";
                             else if (EB2_Q12_Status == 2) { getexp 13000, 8600; EB2_Q12_Status = 0; EB2_Q12_M1 = 0; EB2_Q12_M2 = 0; EB2_Q12_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
-                            else if (EB2_Q12_Status == 1) mes "榔頭 " + EB2_Q12_M1 + "/10，刺刀 " + EB2_Q12_M2 + "/10。";
+                            else if (EB2_Q12_Status == 1) mes "榔頭哥布靈 " + EB2_Q12_M1 + "/10，刺刀哥布靈 " + EB2_Q12_M2 + "/10。";
                             else { if (BaseLevel < 40) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q12_Status = 1; mes "已接取！"; } }
                             next; goto L_Reg_Goblin;
 
@@ -329,7 +329,7 @@ L_MainMenu:
                             mes "[為難的傢伙們] 目標：弓箭哥布靈 10 隻，刺錘哥布靈 10 隻。"; next;
                             if (gettimetick(2) < EB2_Q13_CD) mes "冷卻中。";
                             else if (EB2_Q13_Status == 2) { getexp 11800, 11900; EB2_Q13_Status = 0; EB2_Q13_M1 = 0; EB2_Q13_M2 = 0; EB2_Q13_CD = gettimetick(2) + 72000; specialeffect2 249; mes "完成！"; }
-                            else if (EB2_Q13_Status == 1) mes "弓箭 " + EB2_Q13_M1 + "/10，刺錘 " + EB2_Q13_M2 + "/10。";
+                            else if (EB2_Q13_Status == 1) mes "弓箭哥布靈 " + EB2_Q13_M1 + "/10，刺錘哥布靈 " + EB2_Q13_M2 + "/10。";
                             else { if (BaseLevel < 50) mes "等級不足！"; else if (select("接取:放棄") == 1) { EB2_Q13_Status = 1; mes "已接取！"; } }
                             next; goto L_Reg_Goblin;
 
@@ -685,8 +685,8 @@ OnCheckTaskProgress:
         EB2_Q4_M1++;
         dispbottom "【掃蕩失事輪1樓】海葵：(" + EB2_Q4_M1 + "/10)";
     }
-    // Q5: 白幽靈 (1117) + 迅捷彎刀海盜骷髏 (2676)
-    if (.@t == 1117 && EB2_Q5_Status == 1 && EB2_Q5_M1 < 10) {
+    // Q5: 白幽靈 (1179) + 迅捷彎刀海盜骷髏 (2676)
+    if (.@t == 1179 && EB2_Q5_Status == 1 && EB2_Q5_M1 < 10) {
         EB2_Q5_M1++;
         if (EB2_Q5_M1 >= 10 && EB2_Q5_M2 >= 1) { EB2_Q5_Status = 2; dispbottom "【任務達成】掃蕩失事輪2樓 完成！"; specialeffect2 438; }
         else dispbottom "【掃蕩失事輪2樓】白幽靈(" + EB2_Q5_M1 + "/10) 迅捷海盜骷髏(" + EB2_Q5_M2 + "/1)";
@@ -729,54 +729,54 @@ OnCheckTaskProgress:
         if (EB2_Q9_M1 >= 20) { EB2_Q9_Status = 2; dispbottom "【任務達成】食心鬼 完成！"; specialeffect2 438; }
         else dispbottom "【食心鬼】茲諾克：(" + EB2_Q9_M1 + "/20)";
     }
-    // Q10: 獸人戰士 (1023) + 女戰士 (1273) + 嬰兒 (1272)
+    // Q10: 獸人戰士 (1023) + 女戰士 (1273) + 獸人嬰兒 (1686)
     if (.@t == 1023 && EB2_Q10_Status == 1 && EB2_Q10_M1 < 15) {
         EB2_Q10_M1++;
         if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
-        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+        else dispbottom "【一網打盡】獸人戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 獸人嬰兒(" + EB2_Q10_M3 + "/10)";
     }
     if (.@t == 1273 && EB2_Q10_Status == 1 && EB2_Q10_M2 < 15) {
         EB2_Q10_M2++;
         if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
-        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+        else dispbottom "【一網打盡】獸人戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 獸人嬰兒(" + EB2_Q10_M3 + "/10)";
     }
-    if (.@t == 1272 && EB2_Q10_Status == 1 && EB2_Q10_M3 < 10) {
+    if (.@t == 1686 && EB2_Q10_Status == 1 && EB2_Q10_M3 < 10) {
         EB2_Q10_M3++;
         if (EB2_Q10_M1 >= 15 && EB2_Q10_M2 >= 15 && EB2_Q10_M3 >= 10) { EB2_Q10_Status = 2; dispbottom "【任務達成】獸人一網打盡 完成！"; specialeffect2 438; }
-        else dispbottom "【一網打盡】戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 嬰兒(" + EB2_Q10_M3 + "/10)";
+        else dispbottom "【一網打盡】獸人戰士(" + EB2_Q10_M1 + "/15) 女戰士(" + EB2_Q10_M2 + "/15) 獸人嬰兒(" + EB2_Q10_M3 + "/10)";
     }
-    // Q11: 大斧 (1122) + 鏈鋸 (1123)
-    if (.@t == 1122 && EB2_Q11_Status == 1 && EB2_Q11_M1 < 10) {
+    // Q11: 大斧哥布靈 (1124) + 鏈錘哥布靈 (1123)
+    if (.@t == 1124 && EB2_Q11_Status == 1 && EB2_Q11_M1 < 10) {
         EB2_Q11_M1++;
         if (EB2_Q11_M1 >= 10 && EB2_Q11_M2 >= 10) { EB2_Q11_Status = 2; dispbottom "【任務達成】整頓凶猛哥布靈 完成！"; specialeffect2 438; }
-        else dispbottom "【凶猛哥布靈】大斧(" + EB2_Q11_M1 + "/10) 鏈鋸(" + EB2_Q11_M2 + "/10)";
+        else dispbottom "【凶猛哥布靈】大斧哥布靈(" + EB2_Q11_M1 + "/10) 鏈錘哥布靈(" + EB2_Q11_M2 + "/10)";
     }
     if (.@t == 1123 && EB2_Q11_Status == 1 && EB2_Q11_M2 < 10) {
         EB2_Q11_M2++;
         if (EB2_Q11_M1 >= 10 && EB2_Q11_M2 >= 10) { EB2_Q11_Status = 2; dispbottom "【任務達成】整頓凶猛哥布靈 完成！"; specialeffect2 438; }
-        else dispbottom "【凶猛哥布靈】大斧(" + EB2_Q11_M1 + "/10) 鏈鋸(" + EB2_Q11_M2 + "/10)";
+        else dispbottom "【凶猛哥布靈】大斧哥布靈(" + EB2_Q11_M1 + "/10) 鏈錘哥布靈(" + EB2_Q11_M2 + "/10)";
     }
-    // Q12: 榔頭 (1124) + 刺刀 (1125)
-    if (.@t == 1124 && EB2_Q12_Status == 1 && EB2_Q12_M1 < 10) {
+    // Q12: 榔頭哥布靈 (1125) + 刺刀哥布靈 (1122)
+    if (.@t == 1125 && EB2_Q12_Status == 1 && EB2_Q12_M1 < 10) {
         EB2_Q12_M1++;
         if (EB2_Q12_M1 >= 10 && EB2_Q12_M2 >= 10) { EB2_Q12_Status = 2; dispbottom "【任務達成】整頓敏捷哥布靈 完成！"; specialeffect2 438; }
-        else dispbottom "【敏捷哥布靈】榔頭(" + EB2_Q12_M1 + "/10) 刺刀(" + EB2_Q12_M2 + "/10)";
+        else dispbottom "【敏捷哥布靈】榔頭哥布靈(" + EB2_Q12_M1 + "/10) 刺刀哥布靈(" + EB2_Q12_M2 + "/10)";
     }
-    if (.@t == 1125 && EB2_Q12_Status == 1 && EB2_Q12_M2 < 10) {
+    if (.@t == 1122 && EB2_Q12_Status == 1 && EB2_Q12_M2 < 10) {
         EB2_Q12_M2++;
         if (EB2_Q12_M1 >= 10 && EB2_Q12_M2 >= 10) { EB2_Q12_Status = 2; dispbottom "【任務達成】整頓敏捷哥布靈 完成！"; specialeffect2 438; }
-        else dispbottom "【敏捷哥布靈】榔頭(" + EB2_Q12_M1 + "/10) 刺刀(" + EB2_Q12_M2 + "/10)";
+        else dispbottom "【敏捷哥布靈】榔頭哥布靈(" + EB2_Q12_M1 + "/10) 刺刀哥布靈(" + EB2_Q12_M2 + "/10)";
     }
-    // Q13: 弓箭 (1126) + 刺錘 (1258)
-    if (.@t == 1126 && EB2_Q13_Status == 1 && EB2_Q13_M1 < 10) {
+    // Q13: 弓箭哥布靈 (1258) + 刺錘哥布靈 (1126)
+    if (.@t == 1258 && EB2_Q13_Status == 1 && EB2_Q13_M1 < 10) {
         EB2_Q13_M1++;
         if (EB2_Q13_M1 >= 10 && EB2_Q13_M2 >= 10) { EB2_Q13_Status = 2; dispbottom "【任務達成】為難的傢伙們 完成！"; specialeffect2 438; }
-        else dispbottom "【為難的傢伙們】弓箭(" + EB2_Q13_M1 + "/10) 刺錘(" + EB2_Q13_M2 + "/10)";
+        else dispbottom "【為難的傢伙們】弓箭哥布靈(" + EB2_Q13_M1 + "/10) 刺錘哥布靈(" + EB2_Q13_M2 + "/10)";
     }
-    if (.@t == 1258 && EB2_Q13_Status == 1 && EB2_Q13_M2 < 10) {
+    if (.@t == 1126 && EB2_Q13_Status == 1 && EB2_Q13_M2 < 10) {
         EB2_Q13_M2++;
         if (EB2_Q13_M1 >= 10 && EB2_Q13_M2 >= 10) { EB2_Q13_Status = 2; dispbottom "【任務達成】為難的傢伙們 完成！"; specialeffect2 438; }
-        else dispbottom "【為難的傢伙們】弓箭(" + EB2_Q13_M1 + "/10) 刺錘(" + EB2_Q13_M2 + "/10)";
+        else dispbottom "【為難的傢伙們】弓箭哥布靈(" + EB2_Q13_M1 + "/10) 刺錘哥布靈(" + EB2_Q13_M2 + "/10)";
     }
     // Q14: 魔鍋蛋 (1138) + 重金屬蝗蟲 (1058)
     if (.@t == 1138 && EB2_Q14_Status == 1 && EB2_Q14_M1 < 10) {
@@ -803,13 +803,13 @@ OnCheckTaskProgress:
         EB2_Q16_M1++;
         dispbottom "【進水時要划槳】螃蟹：(" + EB2_Q16_M1 + "/10)";
     }
-    // Q17: 異變魚 (1069) + 馬克 (1063)
+    // Q17: 異變魚 (1069) + 馬克 (1045)
     if (.@t == 1069 && EB2_Q17_Status == 1 && EB2_Q17_M1 < 10) {
         EB2_Q17_M1++;
         if (EB2_Q17_M1 >= 10 && EB2_Q17_M2 >= 10) { EB2_Q17_Status = 2; dispbottom "【任務達成】對好友的關懷 完成！"; specialeffect2 438; }
         else dispbottom "【對好友的關懷】異變魚(" + EB2_Q17_M1 + "/10) 馬克(" + EB2_Q17_M2 + "/10)";
     }
-    if (.@t == 1063 && EB2_Q17_Status == 1 && EB2_Q17_M2 < 10) {
+    if (.@t == 1045 && EB2_Q17_Status == 1 && EB2_Q17_M2 < 10) {
         EB2_Q17_M2++;
         if (EB2_Q17_M1 >= 10 && EB2_Q17_M2 >= 10) { EB2_Q17_Status = 2; dispbottom "【任務達成】對好友的關懷 完成！"; specialeffect2 438; }
         else dispbottom "【對好友的關懷】異變魚(" + EB2_Q17_M1 + "/10) 馬克(" + EB2_Q17_M2 + "/10)";
@@ -840,8 +840,8 @@ OnCheckTaskProgress:
         EB2_Q21_M1++;
         dispbottom "【木乃伊和藍色箱子】木乃伊：(" + EB2_Q21_M1 + "/10)";
     }
-    // Q22: 木乃伊犬 (1151) + 米洛斯 (1149)
-    if (.@t == 1151 && EB2_Q22_Status == 1 && EB2_Q22_M1 < 10) {
+    // Q22: 木乃伊犬 (1032) + 米洛斯 (1149)
+    if (.@t == 1032 && EB2_Q22_Status == 1 && EB2_Q22_M1 < 10) {
         EB2_Q22_M1++;
         if (EB2_Q22_M1 >= 10 && EB2_Q22_M2 >= 10) { EB2_Q22_Status = 2; dispbottom "【任務達成】無法入睡 完成！"; specialeffect2 438; }
         else dispbottom "【無法入睡】木乃伊犬(" + EB2_Q22_M1 + "/10) 米洛斯(" + EB2_Q22_M2 + "/10)";
@@ -851,8 +851,8 @@ OnCheckTaskProgress:
         if (EB2_Q22_M1 >= 10 && EB2_Q22_M2 >= 10) { EB2_Q22_Status = 2; dispbottom "【任務達成】無法入睡 完成！"; specialeffect2 438; }
         else dispbottom "【無法入睡】木乃伊犬(" + EB2_Q22_M1 + "/10) 米洛斯(" + EB2_Q22_M2 + "/10)";
     }
-    // Q23: 蛇女伊絲 (1139)
-    if (.@t == 1139 && EB2_Q23_Status == 1 && EB2_Q23_M1 < 20) {
+    // Q23: 蛇女伊絲 (1029)
+    if (.@t == 1029 && EB2_Q23_Status == 1 && EB2_Q23_M1 < 20) {
         EB2_Q23_M1++;
         if (EB2_Q23_M1 >= 20) { EB2_Q23_Status = 2; dispbottom "【任務達成】擊殺蛇女伊絲 完成！"; specialeffect2 438; }
         else dispbottom "【擊殺蛇女伊絲】蛇女伊絲：(" + EB2_Q23_M1 + "/20)";
@@ -902,8 +902,8 @@ OnCheckTaskProgress:
         EB2_Q29_M1++;
         dispbottom "【魔法的蹤跡】鬼女：(" + EB2_Q29_M1 + "/12)";
     }
-    // Q30: 赤蒼蠅 (1107)
-    if (.@t == 1107 && EB2_Q30_Status == 1 && EB2_Q30_M1 < 10) {
+    // Q30: 赤蒼蠅 (1035)
+    if (.@t == 1035 && EB2_Q30_Status == 1 && EB2_Q30_M1 < 10) {
         EB2_Q30_M1++;
         if (EB2_Q30_M1 >= 10) { EB2_Q30_Status = 2; dispbottom "【任務達成】擊殺赤蒼蠅 完成！"; specialeffect2 438; }
         else dispbottom "【擊殺赤蒼蠅】赤蒼蠅：(" + EB2_Q30_M1 + "/10)";
