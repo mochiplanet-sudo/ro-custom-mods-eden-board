@@ -1,0 +1,52 @@
+// ==============================================================
+// 呆呆測試專用 NPC (放在呆呆旁邊，隨時清除冷卻與重置狀態)
+// ==============================================================
+
+prt_fild08,182,370,4	script	呆呆測試員	4_M_BARBER,{
+
+    mes "[呆呆測試員]";
+    mes "我是測試專用除錯 NPC。";
+    mes "當前冷卻到期戳：^777777" + Daidai_CD + "^000000";
+    mes "當前任務進度：^0000FF" + Daidai_Count + " / " + $Daidai_ReqCount + "^000000 (狀態碼: " + Daidai_Status + ")";
+    next;
+
+    switch(select("【清除冷卻】立刻重置為可接取狀態:【瞬間完成】直接將任務設為達標可回報:【徹底歸零】清空所有任務與冷卻數據:取消")) {
+
+        // 1. 單純清除 20 小時 / 每日 04:00 冷卻
+        case 1:
+            Daidai_CD = 0;
+            specialeffect2 249;
+            mes "[呆呆測試員]";
+            mes "冷卻時間已歸零！現在可以直接去找呆呆對話接任務了。";
+            close;
+
+        // 2. 瞬間達標 (省去親自打 30 隻怪的時間，方便測試回報對話與 Buff)
+        case 2:
+            if (Daidai_Status != 1) {
+                mes "[呆呆測試員]";
+                mes "你身上目前沒有進行中的呆呆任務喔！";
+                close;
+            }
+            Daidai_Status = 2;
+            Daidai_Count = $Daidai_ReqCount;
+            specialeffect2 438;
+            mes "[呆呆測試員]";
+            mes "任務已標記為【可領賞】狀態，快去點呆呆測試領取！";
+            close;
+
+        // 3. 徹底洗白 (當作從沒接過)
+        case 3:
+            Daidai_CD = 0;
+            Daidai_Status = 0;
+            Daidai_Count = 0;
+            Daidai_MobID = 0;
+            Daidai_MobName$ = "";
+            specialeffect2 249;
+            mes "[呆呆測試員]";
+            mes "所有呆呆資料已徹底清空還原。";
+            close;
+
+        case 4:
+            close;
+    }
+}

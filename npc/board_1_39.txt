@@ -1,10 +1,20 @@
 // ==============================================================
-// 1~39委託佈告欄 (一鍵回報 + 接取迴圈 + 20小時冷卻版)
+// 1~39委託佈告欄 (一鍵回報 + 接取迴圈 + 每日04:00重置版)
 // ==============================================================
 
 prt_fild08,184,377,4	script	1~39	857,{
 
 L_MainMenu:
+    .@now = gettimetick(2);
+
+    // 計算下一個每日凌晨 04:00 的重置時間戳
+    .@today_4am = .@now - (gettime(DT_HOUR) * 3600 + gettime(DT_MINUTE) * 60 + gettime(DT_SECOND)) + 14400;
+    if (.@now >= .@today_4am) {
+        .@cd_time = .@today_4am + 86400; // 明天凌晨 04:00
+    } else {
+        .@cd_time = .@today_4am;         // 今天凌晨 04:00
+    }
+
     // 計算當前共有幾個委託可以回報
     .@claim_cnt = 0;
     if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) .@claim_cnt++;
@@ -22,7 +32,7 @@ L_MainMenu:
 
     mes "[1~39委託佈告欄]";
     mes "這裡張貼著適合等級 1～39 冒險者接取的委託懸賞。";
-    mes "完成委託後，冷卻時間為 ^FF000020 小時^000000。";
+    mes "完成委託後，重置時間為 ^FF0000每日凌晨 04:00^000000。";
     next;
 
     .@claim_btn$ = (.@claim_cnt > 0 ? "^007700【★ 一鍵回報所有已完成委託 (" + .@claim_cnt + "個) ★】^000000" : "^777777【一鍵回報 (目前無可回報任務)】^000000");
@@ -42,7 +52,6 @@ L_MainMenu:
 
             .@total_bexp = 0;
             .@total_jexp = 0;
-            .@cd_time = gettimetick(2) + 72000; // 20 小時 = 72000 秒
 
             // Q1: 爽缺工作
             if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) {
@@ -116,7 +125,7 @@ L_MainMenu:
             mes "本次共結算 ^0000FF" + .@claim_cnt + "^000000 個委託！";
             mes "獲得 Base 經驗值：^FF0000+" + .@total_bexp + "^000000";
             mes "獲得 Job 經驗值：^FF0000+" + .@total_jexp + "^000000";
-            mes "回報的委託已進入 20 小時冷卻期。";
+            mes "回報的委託將於明日凌晨 04:00 重置。";
             next;
             goto L_MainMenu;
 
@@ -165,7 +174,7 @@ L_MainMenu:
                     } else if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) {
                         delitem 1068, 3;
                         getexp 800, 800;
-                        EB_Q1_Status = 0; EB_Q1_M1 = 0; EB_Q1_CD = gettimetick(2) + 72000;
+                        EB_Q1_Status = 0; EB_Q1_M1 = 0; EB_Q1_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q1_Status == 1) {
@@ -188,7 +197,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q2_Status == 2) {
                         getexp 1600, 1400;
-                        EB_Q2_Status = 0; EB_Q2_M1 = 0; EB_Q2_CD = gettimetick(2) + 72000;
+                        EB_Q2_Status = 0; EB_Q2_M1 = 0; EB_Q2_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q2_Status == 1) {
@@ -212,7 +221,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q3_Status == 2) {
                         getexp 1600, 1400;
-                        EB_Q3_Status = 0; EB_Q3_M1 = 0; EB_Q3_CD = gettimetick(2) + 72000;
+                        EB_Q3_Status = 0; EB_Q3_M1 = 0; EB_Q3_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q3_Status == 1) {
@@ -236,7 +245,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q4_Status == 2) {
                         getexp 3000, 2000;
-                        EB_Q4_Status = 0; EB_Q4_M1 = 0; EB_Q4_CD = gettimetick(2) + 72000;
+                        EB_Q4_Status = 0; EB_Q4_M1 = 0; EB_Q4_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q4_Status == 1) {
@@ -293,7 +302,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q5_Status == 2) {
                         getexp 1200, 1000;
-                        EB_Q5_Status = 0; EB_Q5_M1 = 0; EB_Q5_CD = gettimetick(2) + 72000;
+                        EB_Q5_Status = 0; EB_Q5_M1 = 0; EB_Q5_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q5_Status == 1) {
@@ -314,10 +323,10 @@ L_MainMenu:
                     next;
                     if (gettimetick(2) < EB_Q6_CD) {
                         .@rem = EB_Q6_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
+                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小化 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q6_Status == 2) {
                         getexp 1600, 1400;
-                        EB_Q6_Status = 0; EB_Q6_M1 = 0; EB_Q6_CD = gettimetick(2) + 72000;
+                        EB_Q6_Status = 0; EB_Q6_M1 = 0; EB_Q6_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q6_Status == 1) {
@@ -341,7 +350,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q7_Status == 2) {
                         getexp 2000, 2000;
-                        EB_Q7_Status = 0; EB_Q7_M1 = 0; EB_Q7_CD = gettimetick(2) + 72000;
+                        EB_Q7_Status = 0; EB_Q7_M1 = 0; EB_Q7_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q7_Status == 1) {
@@ -383,7 +392,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q8_Status == 2) {
                         getexp 3200, 3000;
-                        EB_Q8_Status = 0; EB_Q8_M1 = 0; EB_Q8_M2 = 0; EB_Q8_CD = gettimetick(2) + 72000;
+                        EB_Q8_Status = 0; EB_Q8_M1 = 0; EB_Q8_M2 = 0; EB_Q8_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q8_Status == 1) {
@@ -425,7 +434,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q9_Status == 2) {
                         getexp 4800, 4200;
-                        EB_Q9_Status = 0; EB_Q9_M1 = 0; EB_Q9_M2 = 0; EB_Q9_CD = gettimetick(2) + 72000;
+                        EB_Q9_Status = 0; EB_Q9_M1 = 0; EB_Q9_M2 = 0; EB_Q9_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q9_Status == 1) {
@@ -483,7 +492,7 @@ L_MainMenu:
                     } else if (EB_Q10_Status == 1 && EB_Q10_M1 >= 10 && countitem(918) >= 10) {
                         delitem 918, 10;
                         getexp 5500, 5500;
-                        EB_Q10_Status = 0; EB_Q10_M1 = 0; EB_Q10_CD = gettimetick(2) + 72000;
+                        EB_Q10_Status = 0; EB_Q10_M1 = 0; EB_Q10_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！收繳 10 個粘稠的蹼，進入冷卻。";
                     } else if (EB_Q10_Status == 1) {
@@ -508,7 +517,7 @@ L_MainMenu:
                     } else if (EB_Q11_Status == 1 && EB_Q11_M1 >= 10 && countitem(962) >= 5) {
                         delitem 962, 5;
                         getexp 5500, 5500;
-                        EB_Q11_Status = 0; EB_Q11_M1 = 0; EB_Q11_CD = gettimetick(2) + 72000;
+                        EB_Q11_Status = 0; EB_Q11_M1 = 0; EB_Q11_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！收繳 5 個觸鬚，進入冷卻。";
                     } else if (EB_Q11_Status == 1) {
@@ -532,7 +541,7 @@ L_MainMenu:
                         mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q12_Status == 2) {
                         getexp 5500, 5500;
-                        EB_Q12_Status = 0; EB_Q12_M1 = 0; EB_Q12_CD = gettimetick(2) + 72000;
+                        EB_Q12_Status = 0; EB_Q12_M1 = 0; EB_Q12_CD = .@cd_time;
                         specialeffect2 249;
                         mes "委託達成！已發放經驗並進入冷卻。";
                     } else if (EB_Q12_Status == 1) {
