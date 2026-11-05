@@ -656,8 +656,8 @@ OnCheckTaskProgress:
         if (EB_Q8_M1 >= 10 && EB_Q8_M2 >= 20) { EB_Q8_Status = 2; dispbottom "【任務達成】不死戰爭 完成！請回看板領賞。"; specialeffect2 438; }
         else dispbottom "【不死戰爭】腐屍：(" + EB_Q8_M1 + "/10)，邪骸戰士：(" + EB_Q8_M2 + "/20)";
     }
-    // 9. 吵鬧的傢伙們：摩卡 (1018) + 大嘴鳥 (1019)
-    if (.@target == 1018 && EB_Q9_Status == 1 && EB_Q9_M1 < 10) {
+    // 9. 吵鬧的傢伙們：摩卡 (1055) + 大嘴鳥 (1019)
+    if (.@target == 1055 && EB_Q9_Status == 1 && EB_Q9_M1 < 10) {
         EB_Q9_M1++;
         if (EB_Q9_M1 >= 10 && EB_Q9_M2 >= 10) { EB_Q9_Status = 2; dispbottom "【任務達成】吵鬧的傢伙們 完成！請回看板領賞。"; specialeffect2 438; }
         else dispbottom "【吵鬧的傢伙們】摩卡：(" + EB_Q9_M1 + "/10)，大嘴鳥：(" + EB_Q9_M2 + "/10)";
