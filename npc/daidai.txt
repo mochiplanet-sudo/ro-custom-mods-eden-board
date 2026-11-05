@@ -59,11 +59,12 @@ prt_fild08,180,370,4	script	呆呆小助手	721,{
         rentitem 22997, 1800;                 // 租賃無限貪婪卷軸 (30 分鐘)
 
         // 計算下一個每日凌晨 04:00 的時間戳
-        .@today_4am = gettimetick(2) - (gettime(DT_HOUR) * 3600 + gettime(DT_MINUTE) * 60 + gettime(DT_SECOND)) + 14400;
+        // 虛擬機的 20:00 = 台灣的凌晨 04:00
+        .@today_4am = gettimetick(2) - (gettime(DT_HOUR) * 3600 + gettime(DT_MINUTE) * 60 + gettime(DT_SECOND)) + 72000;
         if (.@now >= .@today_4am) {
-            Daidai_CD = .@today_4am + 86400; // 明天凌晨 04:00
+            Daidai_CD = .@today_4am + 86400; // 明天凌晨 20:00
         } else {
-            Daidai_CD = .@today_4am;         // 今天凌晨 04:00
+            Daidai_CD = .@today_4am;         // 今天凌晨 20:00
         }
 
         // 重置任務數據
