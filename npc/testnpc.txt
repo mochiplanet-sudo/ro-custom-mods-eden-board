@@ -1,0 +1,79 @@
+// ==============================================================
+// 測試用：全委託任務道具補給 NPC
+// ==============================================================
+prt_fild08,182,274,4	script	委託道具測試員	909,{
+    mes "[委託道具測試員]";
+    mes "我是測試用 NPC，要領取委託看板所需的任務道具嗎？";
+    next;
+
+    switch(select("領取一輪所需數量:各領取 100 個 (測試大量):清除身上所有任務道具:取消")) {
+        case 1:
+            // 1~39
+            getitem 1068, 3;    // 世界樹枝
+            getitem 918, 10;    // 粘稠的蹼
+            getitem 962, 10;    // 觸鬚 (Q11:5 + EB2_Q4:5)
+
+            // 40~69
+            getitem 25074, 10;  // 古董硬幣
+            getitem 932, 10;    // 死人遺骨
+            getitem 955, 5;     // 昆蟲外殼
+            getitem 966, 5;     // 蛤蜊肉
+            getitem 1052, 10;   // 單細胞
+            getitem 960, 5;     // 鉗子
+            getitem 1024, 10;   // 墨汁
+            getitem 953, 1;     // 人魚之心
+            getitem 928, 1;     // 亡者遺物
+            getitem 25073, 10;  // 神秘莎草紙
+            getitem 1056, 5;    // 黃玉碎片
+            getitem 609, 15;    // 返魂符
+            getitem 1049, 3;    // 少女手帕
+
+            // 70~99
+            getitem 7107, 10;   // 魔羌之毛皮
+            getitem 7101, 10;   // 七彩大嘴鳥之羽
+            getitem 7315, 5;    // 黑曜石
+
+            specialeffect2 249;
+            mes "[委託道具測試員]";
+            mes "已發放剛好解完一輪所需的道具量。";
+            close;
+
+        case 2:
+            .@items = 18;
+            setarray .@item_ids[0], 1068, 918, 962, 25074, 932, 955, 966, 1052, 960, 1024, 953, 928, 25073, 1056, 609, 1049, 7107, 7101, 7315;
+            for (.@i = 0; .@i <= .@items; .@i++) {
+                getitem .@item_ids[.@i], 100;
+            }
+            specialeffect2 249;
+            mes "[委託道具測試員]";
+            mes "已補給所有任務道具各 100 個，注意負重。";
+            close;
+
+        case 3:
+            delitem 1068, countitem(1068);
+            delitem 918, countitem(918);
+            delitem 962, countitem(962);
+            delitem 25074, countitem(25074);
+            delitem 932, countitem(932);
+            delitem 955, countitem(955);
+            delitem 966, countitem(966);
+            delitem 1052, countitem(1052);
+            delitem 960, countitem(960);
+            delitem 1024, countitem(1024);
+            delitem 953, countitem(953);
+            delitem 928, countitem(928);
+            delitem 25073, countitem(25073);
+            delitem 1056, countitem(1056);
+            delitem 609, countitem(609);
+            delitem 1049, countitem(1049);
+            delitem 7107, countitem(7107);
+            delitem 7101, countitem(7101);
+            delitem 7315, countitem(7315);
+            mes "[委託道具測試員]";
+            mes "已清空身上所有的委託道具。";
+            close;
+
+        case 4:
+            close;
+    }
+}
