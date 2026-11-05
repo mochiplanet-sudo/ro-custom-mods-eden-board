@@ -128,7 +128,7 @@ L_MainMenu:
 
             // 吉芬地下
             if (EB2_Q30_Status == 2) { .@tb += 8000; .@tj += 6800; EB2_Q30_Status = 0; EB2_Q30_M1 = 0; EB2_Q30_CD = .@cd; }
-            if (EB2_Q31_Status == 2) { .@tb += 14800; .@tj += 13660; EB2_Q31_Status = 0; EB2_Q31_M1 = 0; EB2_Q31_CD = .@cd; }
+            if (EB2_Q31_Status == 2) { .@tb += 14800; .@tj += 13660; EB2_Q31_Status = 0; EB2_Q31_M1 = 0; EB2_Q31_M2 = 0; EB2_Q31_CD = .@cd; }
 
             // 克魔島
             if (EB2_Q32_Status == 2) { .@tb += 10000; .@tj += 10000; EB2_Q32_Status = 0; EB2_Q32_M1 = 0; EB2_Q32_M2 = 0; EB2_Q32_CD = .@cd; }
@@ -863,7 +863,7 @@ OnCheckTaskProgress:
     }
     if (.@t == 1164 && EB2_Q24_Status == 1 && EB2_Q24_M2 < 15) {
         EB2_Q24_M2++;
-        if (EB2_Q24_M1 >= 15 && EB2_Q24_M2 >= 15 && countitem(25073) >= 10) { EB2_Q24_Status = 2; dispbottom "【任務達成】人面獅身像的工人們 完成！"; specialeffect2 438; }
+        if (EB2_Q24_M1 >= 15 && EB2_Q24_M2 >= 15) { EB2_Q24_Status = 2; dispbottom "【任務達成】人面獅身像的工人們 完成！"; specialeffect2 438; }
         else dispbottom "【工人們】傑洛米(" + EB2_Q24_M1 + "/15) 諾可伊(" + EB2_Q24_M2 + "/15)";
     }
     // Q25: 馬爾杜克 (1140) + 帕莎納 (1154)

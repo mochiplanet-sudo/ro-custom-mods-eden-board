@@ -323,7 +323,7 @@ L_MainMenu:
                     next;
                     if (gettimetick(2) < EB_Q6_CD) {
                         .@rem = EB_Q6_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小化 " + ((.@rem%3600)/60) + " 分。";
+                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
                     } else if (EB_Q6_Status == 2) {
                         getexp 1600, 1400;
                         EB_Q6_Status = 0; EB_Q6_M1 = 0; EB_Q6_CD = .@cd_time;
