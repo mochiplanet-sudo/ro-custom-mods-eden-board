@@ -105,11 +105,7 @@ L_RegionMenu:
                 } else if (callsub(L_CheckClaimable, .@i)) {
                     .@prefix$ = "^007700【可領賞】^000000";
                 } else if (EB_Status[.@i] == 1) {
-                    if ($EB_M2_Req[.@i] == 0 && $EB_ItemID[.@i] == 0) {
-                        .@prefix$ = "^0000FF【進行中 " + EB_M1[.@i] + "/" + $EB_M1_Req[.@i] + "】^000000";
-                    } else {
-                        .@prefix$ = "^0000FF【進行中】^000000";
-                    }
+                    .@prefix$ = "^0000FF【進行中】^000000";
                 } else {
                     .@prefix$ = "【接取】";
                 }
