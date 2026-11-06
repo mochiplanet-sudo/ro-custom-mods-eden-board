@@ -1,5 +1,5 @@
 // ==============================================================
-// 1~39委託佈告欄 (陣列架構優化版)
+// 1~39委託佈告欄 (一鍵回報 + 接取迴圈 + 每日04:00重置版。陣列架構優化版)
 // ==============================================================
 
 prt_fild08,184,377,4	script	1~39	857,{
@@ -10,9 +10,9 @@ L_MainMenu:
     // 計算下一個每日凌晨 04:00 的重置時間戳 (虛擬機 20:00 = 台灣 04:00)
     .@today_4am = .@now - (gettime(DT_HOUR) * 3600 + gettime(DT_MINUTE) * 60 + gettime(DT_SECOND)) + 72000;
     if (.@now >= .@today_4am) {
-        .@cd_time = .@today_4am + 86400;
+        .@cd_time = .@today_4am + 86400; // 明天凌晨 20:00
     } else {
-        .@cd_time = .@today_4am;
+        .@cd_time = .@today_4am;         // 今天凌晨 20:00
     }
 
     // 計算當前共有幾個委託可以回報 (陣列遍歷)
@@ -61,6 +61,7 @@ L_MainMenu:
                 }
             }
 
+            // 發放經驗與特效
             getexp .@total_bexp, .@total_jexp;
             specialeffect2 438;
             mes "[1~39佈告欄]";
@@ -207,26 +208,30 @@ L_BuildProgressStr:
     return .@str$ + "。";
 
 // ==============================================================
-// 全域擊殺監聽核心 (自動更新任務計數與跳字提醒，支援 20 格隊友共享)
+// 全域擊殺監聽核心 (自動更新任務計數與跳字提醒，僅限同畫面 20 格內隊友共享)
 // ==============================================================
 OnNPCKillEvent:
-    .@pid = getcharid(1);
+    .@pid = getcharid(1); // 獲取隊伍 ID
 
+    // 情況 A：單人遊玩 (無組隊)，直接結算自己
     if (!.@pid) {
         callsub OnCheckTaskProgress, killedrid;
         end;
     }
 
-    .@killedrid = killedrid;
-    getpartymember .@pid, 1;
-    getpartymember .@pid, 2;
-    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC;
+    // 情況 B：組隊狀態，共享進度
+    .@killedrid = killedrid; // 將魔物ID轉為腳本局部變數保護
+    getpartymember .@pid, 1; // 填入 $@partymembercid (角色ID)
+    getpartymember .@pid, 2; // 填入 $@partymemberaid (帳號ID)
+    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC; // 抓取擊殺者的正確座標
 
     for (.@i = 0; .@i < $@partymembercount; ++.@i) {
+        // 精確驗證該隊友角色是否真正處於在線狀態
         if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
-            attachrid $@partymemberaid[.@i];
+            attachrid $@partymemberaid[.@i]; // 切換至該隊友
             getmapxy .@map2$, .@x2, .@y2, UNITTYPE_PC;
 
+            // 條件：同地圖 + 存活 + 擊殺者周圍 20 格視野緩衝區內
             if (.@map1$ == .@map2$ && distance(.@x1, .@y1, .@x2, .@y2) <= 20 && Hp > 0) {
                 callsub OnCheckTaskProgress, .@killedrid;
             }
@@ -235,7 +240,7 @@ OnNPCKillEvent:
     end;
 
 // --------------------------------------------------------------
-// 任務擊殺判定子程序 (陣列查表匹配)
+// 各任務進度判定子程序 (組隊全體共享進度 + 獨立子程序引擎。陣列查表匹配)
 // --------------------------------------------------------------
 OnCheckTaskProgress:
     .@target = getarg(0);
