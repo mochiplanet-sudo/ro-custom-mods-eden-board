@@ -1,0 +1,212 @@
+// ==============================================================
+// 裝備委託測試 NPC (南門 & 斐揚)
+// ==============================================================
+
+prt_fild08,173,368,4	script	裝備委託官::EdenEqOfficer	106,{
+
+    mes "[裝備委託官]";
+    mes "你好！我是負責分派初級裝備委託的考官。";
+    mes "挑選你想進行的委託區域吧：";
+    next;
+
+L_MainMenu:
+    switch(select("【南門區域 委託】:【斐揚區域 委託】:離開")) {
+        case 1:
+            callsub L_ShowRegionMenu, 1;
+            goto L_MainMenu;
+        case 2:
+            callsub L_ShowRegionMenu, 2;
+            goto L_MainMenu;
+        case 3:
+            mes "[裝備委託官]";
+            mes "隨時歡迎你來領取裝備與獎勵！";
+            close;
+    }
+
+// --------------------------------------------------------------
+// 區域選單通用產生器
+// --------------------------------------------------------------
+L_ShowRegionMenu:
+    .@reg = getarg(0);
+
+    while(1) {
+        .@menu$ = "";
+        .@start = (.@reg == 1 ? 0 : 3);
+        .@end   = (.@reg == 1 ? 3 : 4);
+
+        for (.@i = .@start; .@i < .@end; ++.@i) {
+            .@st = EQ_Status[.@i];
+            if (.@st == 2) {
+                .@tag$ = "^007700【可領賞】^000000";
+            } else if (.@st == 1) {
+                .@tag$ = "^0000FF【進行中 " + EQ_Count[.@i] + "/" + $EQ_ReqCount[.@i] + "】^000000";
+            } else {
+                .@tag$ = "【接取】";
+            }
+            .@menu$ = .@menu$ + .@tag$ + $EQ_TaskName$[.@i] + ":";
+        }
+        .@menu$ = .@menu$ + "返回上一層";
+
+        .@sel = select(.@menu$);
+        if (.@sel == (.@end - .@start + 1)) return;
+
+        .@task_idx = .@start + (.@sel - 1);
+        callsub L_ProcessTask, .@task_idx;
+    }
+    return;
+
+// --------------------------------------------------------------
+// 單一任務互動 (接取 / 領獎 / 防呆判定)
+// --------------------------------------------------------------
+L_ProcessTask:
+    .@idx = getarg(0);
+
+    mes "[裝備委託官]";
+    mes "委託項目：【" + $EQ_TaskName$[.@idx] + "】";
+    mes "目標魔物：討伐 " + $EQ_ReqCount[.@idx] + " 隻【" + $EQ_MobName$[.@idx] + "】";
+    mes "委託獎勵：";
+    if ($EQ_Reward_BExp[.@idx] > 0 || $EQ_Reward_JExp[.@idx] > 0) {
+        mes " -> Base經驗：^FF0000+" + $EQ_Reward_BExp[.@idx] + "^000000 / Job經驗：^FF0000+" + $EQ_Reward_JExp[.@idx] + "^000000";
+    }
+    if ($EQ_Reward_ItemID1[.@idx] > 0) {
+        mes " -> 裝備：" + getitemname($EQ_Reward_ItemID1[.@idx]) + " x" + $EQ_Reward_ItemCnt1[.@idx];
+    }
+    if ($EQ_Reward_ItemID2[.@idx] > 0) {
+        mes " -> 裝備：" + getitemname($EQ_Reward_ItemID2[.@idx]) + " x" + $EQ_Reward_ItemCnt2[.@idx];
+    }
+    next;
+
+    // 狀態 2：已達標，準備領獎
+    if (EQ_Status[.@idx] == 2) {
+        // [防呆] 檢查裝備重量與背包格數，避免裝備被吃或掉地上
+        if ($EQ_Reward_ItemID1[.@idx] > 0 && checkweight($EQ_Reward_ItemID1[.@idx], $EQ_Reward_ItemCnt1[.@idx]) == 0) {
+            mes "[裝備委託官]";
+            mes "^FF0000你的背包負重或空間不足！^000000";
+            mes "請先清理背包，留出足夠的空間與負重後再來領取。";
+            close;
+        }
+        if ($EQ_Reward_ItemID2[.@idx] > 0 && checkweight($EQ_Reward_ItemID2[.@idx], $EQ_Reward_ItemCnt2[.@idx]) == 0) {
+            mes "[裝備委託官]";
+            mes "^FF0000你的背包負重或空間不足！^000000";
+            mes "請先清理背包，留出足夠的空間與負重後再來領取。";
+            close;
+        }
+
+        // 發放經驗值
+        if ($EQ_Reward_BExp[.@idx] > 0 || $EQ_Reward_JExp[.@idx] > 0) {
+            getexp $EQ_Reward_BExp[.@idx], $EQ_Reward_JExp[.@idx];
+        }
+
+        // 發放裝備
+        if ($EQ_Reward_ItemID1[.@idx] > 0) {
+            getitem $EQ_Reward_ItemID1[.@idx], $EQ_Reward_ItemCnt1[.@idx];
+        }
+        if ($EQ_Reward_ItemID2[.@idx] > 0) {
+            getitem $EQ_Reward_ItemID2[.@idx], $EQ_Reward_ItemCnt2[.@idx];
+        }
+
+        // 重置狀態
+        EQ_Status[.@idx] = 0;
+        EQ_Count[.@idx] = 0;
+
+        // 特效與手感反饋
+        specialeffect2 438;
+        mes "[裝備委託官]";
+        mes "太優秀了！委託順利達成，獎勵已經發送至你的背包。";
+        next;
+        return;
+    }
+
+    // 狀態 1：進行中
+    if (EQ_Status[.@idx] == 1) {
+        mes "[裝備委託官]";
+        mes "目前的進度為：^0000FF" + EQ_Count[.@idx] + " / " + $EQ_ReqCount[.@idx] + "^000000 隻。";
+        mes "請加把勁完成後再來找我領賞！";
+        next;
+        return;
+    }
+
+    // 狀態 0：尚未接取
+    if (select("接取這項委託:暫時不需要") == 1) {
+        EQ_Status[.@idx] = 1;
+        EQ_Count[.@idx] = 0;
+        mes "[裝備委託官]";
+        mes "已成功接取！去擊倒 " + $EQ_ReqCount[.@idx] + " 隻【" + $EQ_MobName$[.@idx] + "】吧！";
+        next;
+    }
+    return;
+
+// ==============================================================
+// 全域擊殺監聽 (支援 20 格隊友共享進度)
+// ==============================================================
+OnNPCKillEvent:
+    .@pid = getcharid(1);
+
+    if (!.@pid) {
+        callsub OnCheckTaskProgress, killedrid;
+        end;
+    }
+
+    .@killedrid = killedrid;
+    getpartymember .@pid, 1;
+    getpartymember .@pid, 2;
+    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC;
+
+    for (.@i = 0; .@i < $@partymembercount; ++.@i) {
+        if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
+            attachrid $@partymemberaid[.@i];
+            getmapxy .@map2$, .@x2, .@y2, UNITTYPE_PC;
+
+            if (.@map1$ == .@map2$ && distance(.@x1, .@y1, .@x2, .@y2) <= 20 && Hp > 0) {
+                callsub OnCheckTaskProgress, .@killedrid;
+            }
+        }
+    }
+    end;
+
+OnCheckTaskProgress:
+    .@t = getarg(0);
+    for (.@i = 0; .@i < getarraysize($EQ_MobID); ++.@i) {
+        if (EQ_Status[.@i] == 1 && .@t == $EQ_MobID[.@i] && EQ_Count[.@i] < $EQ_ReqCount[.@i]) {
+            EQ_Count[.@i]++;
+            if (EQ_Count[.@i] >= $EQ_ReqCount[.@i]) {
+                EQ_Status[.@i] = 2;
+                dispbottom "【委託達成】" + $EQ_TaskName$[.@i] + " 目標達成！請回南門找委託官領賞。";
+                specialeffect2 438;
+            } else {
+                dispbottom "【委託進度】" + $EQ_TaskName$[.@i] + " (" + EQ_Count[.@i] + "/" + $EQ_ReqCount[.@i] + ")";
+            }
+            break;
+        }
+    }
+    return;
+
+// ==============================================================
+// 任務資料配置表 (陣列查表架構，新增項目只需在此追加)
+// ==============================================================
+OnInit:
+    // 任務名稱
+    setarray $EQ_TaskName$[0],
+        "南門-波利討伐",
+        "南門-瘋兔討伐",
+        "南門-綠棉蟲討伐",
+        "斐揚-樹精討伐";
+
+    // 魔物名稱、ID、需求數量
+    setarray $EQ_MobName$[0],   "波利", "瘋兔", "綠棉蟲", "樹精";
+    setarray $EQ_MobID[0],      1002,   1063,   1007,     1010;
+    setarray $EQ_ReqCount[0],   5,      5,      5,        5;
+
+    // 經驗獎勵 (Base, Job)
+    setarray $EQ_Reward_BExp[0], 100, 80, 0, 0;
+    setarray $EQ_Reward_JExp[0], 90,  70, 0, 0;
+
+    // 裝備獎勵 1 (道具ID, 數量) - 2301: 棉襯衫, 1207: 笨拙短劍
+    setarray $EQ_Reward_ItemID1[0],  0, 0, 2301, 1207;
+    setarray $EQ_Reward_ItemCnt1[0], 0, 0, 1,    1;
+
+    // 裝備獎勵 2 (道具ID, 數量) - 2607: 髮夾
+    setarray $EQ_Reward_ItemID2[0],  0, 0, 0, 2607;
+    setarray $EQ_Reward_ItemCnt2[0], 0, 0, 0, 1;
+    end;
+}

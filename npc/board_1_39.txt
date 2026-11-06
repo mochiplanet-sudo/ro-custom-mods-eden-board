@@ -1,5 +1,5 @@
 // ==============================================================
-// 1~39委託佈告欄 (一鍵回報 + 接取迴圈 + 每日04:00重置版)
+// 1~39委託佈告欄 (陣列架構優化版)
 // ==============================================================
 
 prt_fild08,184,377,4	script	1~39	857,{
@@ -7,29 +7,19 @@ prt_fild08,184,377,4	script	1~39	857,{
 L_MainMenu:
     .@now = gettimetick(2);
 
-    // 計算下一個每日凌晨 04:00 的重置時間戳
-    // 虛擬機的 20:00 = 台灣的凌晨 04:00
+    // 計算下一個每日凌晨 04:00 的重置時間戳 (虛擬機 20:00 = 台灣 04:00)
     .@today_4am = .@now - (gettime(DT_HOUR) * 3600 + gettime(DT_MINUTE) * 60 + gettime(DT_SECOND)) + 72000;
     if (.@now >= .@today_4am) {
-        .@cd_time = .@today_4am + 86400; // 明天凌晨 20:00
+        .@cd_time = .@today_4am + 86400;
     } else {
-        .@cd_time = .@today_4am;         // 今天凌晨 20:00
+        .@cd_time = .@today_4am;
     }
 
-    // 計算當前共有幾個委託可以回報
+    // 計算當前共有幾個委託可以回報 (陣列遍歷)
     .@claim_cnt = 0;
-    if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) .@claim_cnt++;
-    if (EB_Q2_Status == 2) .@claim_cnt++;
-    if (EB_Q3_Status == 2) .@claim_cnt++;
-    if (EB_Q4_Status == 2) .@claim_cnt++;
-    if (EB_Q5_Status == 2) .@claim_cnt++;
-    if (EB_Q6_Status == 2) .@claim_cnt++;
-    if (EB_Q7_Status == 2) .@claim_cnt++;
-    if (EB_Q8_Status == 2) .@claim_cnt++;
-    if (EB_Q9_Status == 2) .@claim_cnt++;
-    if (EB_Q10_Status == 1 && EB_Q10_M1 >= 10 && countitem(918) >= 10) .@claim_cnt++;
-    if (EB_Q11_Status == 1 && EB_Q11_M1 >= 10 && countitem(962) >= 5) .@claim_cnt++;
-    if (EB_Q12_Status == 2) .@claim_cnt++;
+    for (.@i = 1; .@i <= 12; ++.@i) {
+        if (callsub(L_CheckClaimable, .@i)) .@claim_cnt++;
+    }
 
     mes "[1~39委託佈告欄]";
     mes "這裡張貼著適合等級 1～39 冒險者接取的委託懸賞。";
@@ -54,71 +44,23 @@ L_MainMenu:
             .@total_bexp = 0;
             .@total_jexp = 0;
 
-            // Q1: 爽缺工作
-            if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) {
-                delitem 1068, 3;
-                .@total_bexp += 800; .@total_jexp += 800;
-                EB_Q1_Status = 0; EB_Q1_M1 = 0; EB_Q1_CD = .@cd_time;
-            }
-            // Q2: 親蛇獵人
-            if (EB_Q2_Status == 2) {
-                .@total_bexp += 1600; .@total_jexp += 1400;
-                EB_Q2_Status = 0; EB_Q2_M1 = 0; EB_Q2_CD = .@cd_time;
-            }
-            // Q3: 那是有害的洋蔥
-            if (EB_Q3_Status == 2) {
-                .@total_bexp += 1600; .@total_jexp += 1400;
-                EB_Q3_Status = 0; EB_Q3_M1 = 0; EB_Q3_CD = .@cd_time;
-            }
-            // Q4: 在變成整個都是蘑菇之前
-            if (EB_Q4_Status == 2) {
-                .@total_bexp += 3000; .@total_jexp += 2000;
-                EB_Q4_Status = 0; EB_Q4_M1 = 0; EB_Q4_CD = .@cd_time;
-            }
-            // Q5: 蜂兵
-            if (EB_Q5_Status == 2) {
-                .@total_bexp += 1200; .@total_jexp += 1000;
-                EB_Q5_Status = 0; EB_Q5_M1 = 0; EB_Q5_CD = .@cd_time;
-            }
-            // Q6: 搖滾蝗蟲
-            if (EB_Q6_Status == 2) {
-                .@total_bexp += 1600; .@total_jexp += 1400;
-                EB_Q6_Status = 0; EB_Q6_M1 = 0; EB_Q6_CD = .@cd_time;
-            }
-            // Q7: 蝸牛
-            if (EB_Q7_Status == 2) {
-                .@total_bexp += 2000; .@total_jexp += 2000;
-                EB_Q7_Status = 0; EB_Q7_M1 = 0; EB_Q7_CD = .@cd_time;
-            }
-            // Q8: 不死戰爭
-            if (EB_Q8_Status == 2) {
-                .@total_bexp += 3200; .@total_jexp += 3000;
-                EB_Q8_Status = 0; EB_Q8_M1 = 0; EB_Q8_M2 = 0; EB_Q8_CD = .@cd_time;
-            }
-            // Q9: 吵鬧的傢伙們
-            if (EB_Q9_Status == 2) {
-                .@total_bexp += 4800; .@total_jexp += 4200;
-                EB_Q9_Status = 0; EB_Q9_M1 = 0; EB_Q9_M2 = 0; EB_Q9_CD = .@cd_time;
-            }
-            // Q10: 芭比Q的料理地獄
-            if (EB_Q10_Status == 1 && EB_Q10_M1 >= 10 && countitem(918) >= 10) {
-                delitem 918, 10;
-                .@total_bexp += 5500; .@total_jexp += 5500;
-                EB_Q10_Status = 0; EB_Q10_M1 = 0; EB_Q10_CD = .@cd_time;
-            }
-            // Q11: 水嫩皮膚芭妮Q
-            if (EB_Q11_Status == 1 && EB_Q11_M1 >= 10 && countitem(962) >= 5) {
-                delitem 962, 5;
-                .@total_bexp += 5500; .@total_jexp += 5500;
-                EB_Q11_Status = 0; EB_Q11_M1 = 0; EB_Q11_CD = .@cd_time;
-            }
-            // Q12: 船到橋頭自然直
-            if (EB_Q12_Status == 2) {
-                .@total_bexp += 5500; .@total_jexp += 5500;
-                EB_Q12_Status = 0; EB_Q12_M1 = 0; EB_Q12_CD = .@cd_time;
+            for (.@i = 1; .@i <= 12; ++.@i) {
+                if (callsub(L_CheckClaimable, .@i)) {
+                    // 若有需要繳交的道具則扣除
+                    if ($EB_ItemID[.@i] > 0) {
+                        delitem $EB_ItemID[.@i], $EB_ItemCnt[.@i];
+                    }
+                    .@total_bexp += $EB_BExp[.@i];
+                    .@total_jexp += $EB_JExp[.@i];
+
+                    // 狀態與計數歸零，寫入 CD
+                    EB_Status[.@i] = 0;
+                    EB_M1[.@i] = 0;
+                    EB_M2[.@i] = 0;
+                    EB_CD[.@i] = .@cd_time;
+                }
             }
 
-            // 發放經驗與特效
             getexp .@total_bexp, .@total_jexp;
             specialeffect2 438;
             mes "[1~39佈告欄]";
@@ -130,468 +72,161 @@ L_MainMenu:
             next;
             goto L_MainMenu;
 
-        // ======================================================
-        // 區域 1：斐揚原野
-        // ======================================================
-        case 2:
-        L_Region_1:
-            .@now = gettimetick(2);
-            // Q1
-            if (.@now < EB_Q1_CD) .@m1$ = "^777777【CD " + ((EB_Q1_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) .@m1$ = "^007700【可領賞】^000000";
-            else if (EB_Q1_Status == 1) .@m1$ = "^0000FF【進行中】^000000";
-            else .@m1$ = "【接取】";
-            .@m1$ = .@m1$ + "爽缺工作 (Lv 1)";
-
-            // Q2
-            if (.@now < EB_Q2_CD) .@m2$ = "^777777【CD " + ((EB_Q2_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q2_Status == 2) .@m2$ = "^007700【可領賞】^000000";
-            else if (EB_Q2_Status == 1) .@m2$ = "^0000FF【進行中 " + EB_Q2_M1 + "/5】^000000";
-            else .@m2$ = "【接取】";
-            .@m2$ = .@m2$ + "親蛇獵人 (Lv 15)";
-
-            // Q3
-            if (.@now < EB_Q3_CD) .@m3$ = "^777777【CD " + ((EB_Q3_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q3_Status == 2) .@m3$ = "^007700【可領賞】^000000";
-            else if (EB_Q3_Status == 1) .@m3$ = "^0000FF【進行中 " + EB_Q3_M1 + "/5】^000000";
-            else .@m3$ = "【接取】";
-            .@m3$ = .@m3$ + "那是有害的洋蔥 (Lv 15)";
-
-            // Q4
-            if (.@now < EB_Q4_CD) .@m4$ = "^777777【CD " + ((EB_Q4_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q4_Status == 2) .@m4$ = "^007700【可領賞】^000000";
-            else if (EB_Q4_Status == 1) .@m4$ = "^0000FF【進行中 " + EB_Q4_M1 + "/10】^000000";
-            else .@m4$ = "【接取】";
-            .@m4$ = .@m4$ + "在變成整個都是蘑菇之前 (Lv 15)";
-
-            switch(select(.@m1$ + ":" + .@m2$ + ":" + .@m3$ + ":" + .@m4$ + ":返回上一層")) {
-                case 1:
-                    mes "[爽缺工作] (需求 Lv 1)";
-                    mes "目標：樹精 5 隻，並收集「世界樹枝」3 個。";
-                    next;
-                    if (gettimetick(2) < EB_Q1_CD) {
-                        .@rem = EB_Q1_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q1_Status == 1 && EB_Q1_M1 >= 5 && countitem(1068) >= 3) {
-                        delitem 1068, 3;
-                        getexp 800, 800;
-                        EB_Q1_Status = 0; EB_Q1_M1 = 0; EB_Q1_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q1_Status == 1) {
-                        mes "[進度] 樹精：(" + EB_Q1_M1 + "/5)，世界樹枝：(" + countitem(1068) + "/3)。";
-                    } else {
-                        if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q1_Status = 1; EB_Q1_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_1;
-
-                case 2:
-                    mes "[親蛇獵人] (需求 Lv 15)";
-                    mes "目標：青蛇 5 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q2_CD) {
-                        .@rem = EB_Q2_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q2_Status == 2) {
-                        getexp 1600, 1400;
-                        EB_Q2_Status = 0; EB_Q2_M1 = 0; EB_Q2_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q2_Status == 1) {
-                        mes "[進度] 青蛇：(" + EB_Q2_M1 + "/5)。";
-                    } else {
-                        if (BaseLevel < 15) mes "等級不足 15 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q2_Status = 1; EB_Q2_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_1;
-
-                case 3:
-                    mes "[那是有害的洋蔥] (需求 Lv 15)";
-                    mes "目標：森靈 5 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q3_CD) {
-                        .@rem = EB_Q3_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q3_Status == 2) {
-                        getexp 1600, 1400;
-                        EB_Q3_Status = 0; EB_Q3_M1 = 0; EB_Q3_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q3_Status == 1) {
-                        mes "[進度] 森靈：(" + EB_Q3_M1 + "/5)。";
-                    } else {
-                        if (BaseLevel < 15) mes "等級不足 15 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q3_Status = 1; EB_Q3_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_1;
-
-                case 4:
-                    mes "[在變成整個都是蘑菇之前] (需求 Lv 15)";
-                    mes "目標：魔菇 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q4_CD) {
-                        .@rem = EB_Q4_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q4_Status == 2) {
-                        getexp 3000, 2000;
-                        EB_Q4_Status = 0; EB_Q4_M1 = 0; EB_Q4_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q4_Status == 1) {
-                        mes "[進度] 魔菇：(" + EB_Q4_M1 + "/10)。";
-                    } else {
-                        if (BaseLevel < 15) mes "等級不足 15 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q4_Status = 1; EB_Q4_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_1;
-
-                case 5:
-                    goto L_MainMenu;
-            }
-            break;
-
-        // ======================================================
-        // 區域 2：普隆德拉區域
-        // ======================================================
-        case 3:
-        L_Region_2:
-            .@now = gettimetick(2);
-            // Q5
-            if (.@now < EB_Q5_CD) .@m5$ = "^777777【CD " + ((EB_Q5_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q5_Status == 2) .@m5$ = "^007700【可領賞】^000000";
-            else if (EB_Q5_Status == 1) .@m5$ = "^0000FF【進行中 " + EB_Q5_M1 + "/10】^000000";
-            else .@m5$ = "【接取】";
-            .@m5$ = .@m5$ + "蜂兵大作戰 (Lv 10)";
-
-            // Q6
-            if (.@now < EB_Q6_CD) .@m6$ = "^777777【CD " + ((EB_Q6_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q6_Status == 2) .@m6$ = "^007700【可領賞】^000000";
-            else if (EB_Q6_Status == 1) .@m6$ = "^0000FF【進行中 " + EB_Q6_M1 + "/10】^000000";
-            else .@m6$ = "【接取】";
-            .@m6$ = .@m6$ + "搖滾蝗蟲大作戰 (Lv 10)";
-
-            // Q7
-            if (.@now < EB_Q7_CD) .@m7$ = "^777777【CD " + ((EB_Q7_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q7_Status == 2) .@m7$ = "^007700【可領賞】^000000";
-            else if (EB_Q7_Status == 1) .@m7$ = "^0000FF【進行中 " + EB_Q7_M1 + "/10】^000000";
-            else .@m7$ = "【接取】";
-            .@m7$ = .@m7$ + "傳奇騎士-蝸牛 (Lv 10)";
-
-            switch(select(.@m5$ + ":" + .@m6$ + ":" + .@m7$ + ":返回上一層")) {
-                case 1:
-                    mes "[遊戲場穩定大作戰-蜂兵] (需求 Lv 10)";
-                    mes "目標：蜂兵 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q5_CD) {
-                        .@rem = EB_Q5_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q5_Status == 2) {
-                        getexp 1200, 1000;
-                        EB_Q5_Status = 0; EB_Q5_M1 = 0; EB_Q5_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q5_Status == 1) {
-                        mes "[進度] 蜂兵：(" + EB_Q5_M1 + "/10)。";
-                    } else {
-                        if (BaseLevel < 10) mes "等級不足 10 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q5_Status = 1; EB_Q5_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_2;
-
-                case 2:
-                    mes "[遊戲場穩定大作戰-搖滾蝗蟲] (需求 Lv 10)";
-                    mes "目標：搖滾蝗蟲 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q6_CD) {
-                        .@rem = EB_Q6_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q6_Status == 2) {
-                        getexp 1600, 1400;
-                        EB_Q6_Status = 0; EB_Q6_M1 = 0; EB_Q6_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q6_Status == 1) {
-                        mes "[進度] 搖滾蝗蟲：(" + EB_Q6_M1 + "/10)。";
-                    } else {
-                        if (BaseLevel < 10) mes "等級不足 10 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q6_Status = 1; EB_Q6_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_2;
-
-                case 3:
-                    mes "[傳奇騎士-蝸牛] (需求 Lv 10)";
-                    mes "目標：蝸牛 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q7_CD) {
-                        .@rem = EB_Q7_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q7_Status == 2) {
-                        getexp 2000, 2000;
-                        EB_Q7_Status = 0; EB_Q7_M1 = 0; EB_Q7_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q7_Status == 1) {
-                        mes "[進度] 蝸牛：(" + EB_Q7_M1 + "/10)。";
-                    } else {
-                        if (BaseLevel < 10) mes "等級不足 10 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q7_Status = 1; EB_Q7_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_2;
-
-                case 4:
-                    goto L_MainMenu;
-            }
-            break;
-
-        // ======================================================
-        // 區域 3：斐揚迷宮
-        // ======================================================
-        case 4:
-        L_Region_3:
-            .@now = gettimetick(2);
-            if (.@now < EB_Q8_CD) .@m8$ = "^777777【CD " + ((EB_Q8_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q8_Status == 2) .@m8$ = "^007700【可領賞】^000000";
-            else if (EB_Q8_Status == 1) .@m8$ = "^0000FF【進行中】^000000";
-            else .@m8$ = "【接取】";
-            .@m8$ = .@m8$ + "不死戰爭 (Lv 15)";
-
-            switch(select(.@m8$ + ":返回上一層")) {
-                case 1:
-                    mes "[不死戰爭] (需求 Lv 15)";
-                    mes "目標：腐屍 10 隻、邪骸戰士 20 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q8_CD) {
-                        .@rem = EB_Q8_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q8_Status == 2) {
-                        getexp 3200, 3000;
-                        EB_Q8_Status = 0; EB_Q8_M1 = 0; EB_Q8_M2 = 0; EB_Q8_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q8_Status == 1) {
-                        mes "[進度] 腐屍：(" + EB_Q8_M1 + "/10)，邪骸戰士：(" + EB_Q8_M2 + "/20)。";
-                    } else {
-                        if (BaseLevel < 15) mes "等級不足 15 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q8_Status = 1; EB_Q8_M1 = 0; EB_Q8_M2 = 0;
-                            mes "已接取委託！請前往斐揚迷宮洞穴。";
-                        }
-                    }
-                    next;
-                    goto L_Region_3;
-
-                case 2:
-                    goto L_MainMenu;
-            }
-            break;
-
-        // ======================================================
-        // 區域 4：伊斯魯得島區域
-        // ======================================================
-        case 5:
-        L_Region_4:
-            .@now = gettimetick(2);
-            if (.@now < EB_Q9_CD) .@m9$ = "^777777【CD " + ((EB_Q9_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q9_Status == 2) .@m9$ = "^007700【可領賞】^000000";
-            else if (EB_Q9_Status == 1) .@m9$ = "^0000FF【進行中】^000000";
-            else .@m9$ = "【接取】";
-            .@m9$ = .@m9$ + "吵鬧的傢伙們 (Lv 20)";
-
-            switch(select(.@m9$ + ":返回上一層")) {
-                case 1:
-                    mes "[吵鬧的傢伙們] (需求 Lv 20)";
-                    mes "目標：摩卡 10 隻、大嘴鳥 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q9_CD) {
-                        .@rem = EB_Q9_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q9_Status == 2) {
-                        getexp 4800, 4200;
-                        EB_Q9_Status = 0; EB_Q9_M1 = 0; EB_Q9_M2 = 0; EB_Q9_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q9_Status == 1) {
-                        mes "[進度] 摩卡：(" + EB_Q9_M1 + "/10)，大嘴鳥：(" + EB_Q9_M2 + "/10)。";
-                    } else {
-                        if (BaseLevel < 20) mes "等級不足 20 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q9_Status = 1; EB_Q9_M1 = 0; EB_Q9_M2 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_4;
-
-                case 2:
-                    goto L_MainMenu;
-            }
-            break;
-
-        // ======================================================
-        // 區域 5：克魔島密穴
-        // ======================================================
-        case 6:
-        L_Region_5:
-            .@now = gettimetick(2);
-            // Q10
-            if (.@now < EB_Q10_CD) .@m10$ = "^777777【CD " + ((EB_Q10_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q10_Status == 1 && EB_Q10_M1 >= 10 && countitem(918) >= 10) .@m10$ = "^007700【可領賞】^000000";
-            else if (EB_Q10_Status == 1) .@m10$ = "^0000FF【進行中】^000000";
-            else .@m10$ = "【接取】";
-            .@m10$ = .@m10$ + "芭比Q的料理地獄 (Lv 30)";
-
-            // Q11
-            if (.@now < EB_Q11_CD) .@m11$ = "^777777【CD " + ((EB_Q11_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q11_Status == 1 && EB_Q11_M1 >= 10 && countitem(962) >= 5) .@m11$ = "^007700【可領賞】^000000";
-            else if (EB_Q11_Status == 1) .@m11$ = "^0000FF【進行中】^000000";
-            else .@m11$ = "【接取】";
-            .@m11$ = .@m11$ + "水嫩皮膚芭妮Q (Lv 30)";
-
-            // Q12
-            if (.@now < EB_Q12_CD) .@m12$ = "^777777【CD " + ((EB_Q12_CD - .@now)/3600) + "h】^000000";
-            else if (EB_Q12_Status == 2) .@m12$ = "^007700【可領賞】^000000";
-            else if (EB_Q12_Status == 1) .@m12$ = "^0000FF【進行中 " + EB_Q12_M1 + "/10】^000000";
-            else .@m12$ = "【接取】";
-            .@m12$ = .@m12$ + "船到橋頭自然直 (Lv 30)";
-
-            switch(select(.@m10$ + ":" + .@m11$ + ":" + .@m12$ + ":返回上一層")) {
-                case 1:
-                    mes "[芭比Q的料理地獄] (需求 Lv 30)";
-                    mes "目標：達拉蛙 10 隻，並收集「粘稠的蹼」10 個。";
-                    next;
-                    if (gettimetick(2) < EB_Q10_CD) {
-                        .@rem = EB_Q10_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q10_Status == 1 && EB_Q10_M1 >= 10 && countitem(918) >= 10) {
-                        delitem 918, 10;
-                        getexp 5500, 5500;
-                        EB_Q10_Status = 0; EB_Q10_M1 = 0; EB_Q10_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！收繳 10 個粘稠的蹼，進入冷卻。";
-                    } else if (EB_Q10_Status == 1) {
-                        mes "[進度] 達拉蛙：(" + EB_Q10_M1 + "/10)，粘稠的蹼：(" + countitem(918) + "/10)。";
-                    } else {
-                        if (BaseLevel < 30) mes "等級不足 30 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q10_Status = 1; EB_Q10_M1 = 0;
-                            mes "已接取委託！請前往克魔島密穴。";
-                        }
-                    }
-                    next;
-                    goto L_Region_5;
-
-                case 2:
-                    mes "[水嫩皮膚芭妮Q] (需求 Lv 30)";
-                    mes "目標：海葵 10 隻，並收集「觸鬚」5 個。";
-                    next;
-                    if (gettimetick(2) < EB_Q11_CD) {
-                        .@rem = EB_Q11_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q11_Status == 1 && EB_Q11_M1 >= 10 && countitem(962) >= 5) {
-                        delitem 962, 5;
-                        getexp 5500, 5500;
-                        EB_Q11_Status = 0; EB_Q11_M1 = 0; EB_Q11_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！收繳 5 個觸鬚，進入冷卻。";
-                    } else if (EB_Q11_Status == 1) {
-                        mes "[進度] 海葵：(" + EB_Q11_M1 + "/10)，觸鬚：(" + countitem(962) + "/5)。";
-                    } else {
-                        if (BaseLevel < 30) mes "等級不足 30 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q11_Status = 1; EB_Q11_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_5;
-
-                case 3:
-                    mes "[船到橋頭自然直] (需求 Lv 30)";
-                    mes "目標：邪骸食人魚 10 隻。";
-                    next;
-                    if (gettimetick(2) < EB_Q12_CD) {
-                        .@rem = EB_Q12_CD - gettimetick(2);
-                        mes "此委託冷卻中，剩餘：" + (.@rem/3600) + " 小時 " + ((.@rem%3600)/60) + " 分。";
-                    } else if (EB_Q12_Status == 2) {
-                        getexp 5500, 5500;
-                        EB_Q12_Status = 0; EB_Q12_M1 = 0; EB_Q12_CD = .@cd_time;
-                        specialeffect2 249;
-                        mes "委託達成！已發放經驗並進入冷卻。";
-                    } else if (EB_Q12_Status == 1) {
-                        mes "[進度] 邪骸食人魚：(" + EB_Q12_M1 + "/10)。";
-                    } else {
-                        if (BaseLevel < 30) mes "等級不足 30 級，無法接取！";
-                        else if (select("接取此任務:暫時不接") == 1) {
-                            EB_Q12_Status = 1; EB_Q12_M1 = 0;
-                            mes "已接取委託！";
-                        }
-                    }
-                    next;
-                    goto L_Region_5;
-
-                case 4:
-                    goto L_MainMenu;
-            }
-            break;
-
-        case 7:
-            close;
+        case 2: callsub L_RegionMenu, 1; goto L_MainMenu; // 斐揚原野
+        case 3: callsub L_RegionMenu, 2; goto L_MainMenu; // 普隆德拉
+        case 4: callsub L_RegionMenu, 3; goto L_MainMenu; // 斐揚迷宮
+        case 5: callsub L_RegionMenu, 4; goto L_MainMenu; // 伊斯魯得島
+        case 6: callsub L_RegionMenu, 5; goto L_MainMenu; // 克魔島密穴
+        case 7: close;
     }
     end;
 
+// --------------------------------------------------------------
+// 分區選單生成子程序 (依分區自動動態組裝選單)
+// --------------------------------------------------------------
+L_RegionMenu:
+    .@reg = getarg(0);
+
+    while(1) {
+        .@now = gettimetick(2);
+        .@menu$ = "";
+        cleararray .@reg_tasks[0], 0, getarraysize(.@reg_tasks);
+        .@cnt = 0;
+
+        for (.@i = 1; .@i <= 12; ++.@i) {
+            if ($EB_Region[.@i] == .@reg) {
+                .@reg_tasks[.@cnt] = .@i;
+                .@cnt++;
+
+                // 判斷按鈕狀態前綴
+                if (.@now < EB_CD[.@i]) {
+                    .@prefix$ = "^777777【CD " + ((EB_CD[.@i] - .@now) / 3600) + "h】^000000";
+                } else if (callsub(L_CheckClaimable, .@i)) {
+                    .@prefix$ = "^007700【可領賞】^000000";
+                } else if (EB_Status[.@i] == 1) {
+                    if ($EB_M2_Req[.@i] == 0 && $EB_ItemID[.@i] == 0) {
+                        .@prefix$ = "^0000FF【進行中 " + EB_M1[.@i] + "/" + $EB_M1_Req[.@i] + "】^000000";
+                    } else {
+                        .@prefix$ = "^0000FF【進行中】^000000";
+                    }
+                } else {
+                    .@prefix$ = "【接取】";
+                }
+                .@menu$ = .@menu$ + .@prefix$ + $EB_MenuName$[.@i] + ":";
+            }
+        }
+        .@menu$ = .@menu$ + "返回上一層";
+
+        .@sel = select(.@menu$);
+        if (.@sel == .@cnt + 1) return;
+
+        .@task_idx = .@reg_tasks[.@sel - 1];
+        callsub L_TaskDetail, .@task_idx, .@cd_time;
+    }
+    return;
+
+// --------------------------------------------------------------
+// 單一任務對話與交互核心
+// --------------------------------------------------------------
+L_TaskDetail:
+    .@idx = getarg(0);
+    .@cd_time = getarg(1);
+    .@now = gettimetick(2);
+
+    mes "[" + $EB_Title$[.@idx] + "] (需求 Lv " + $EB_ReqLv[.@idx] + ")";
+    mes $EB_Desc$[.@idx];
+    next;
+
+    // 1. 冷卻中判定
+    if (.@now < EB_CD[.@idx]) {
+        .@rem = EB_CD[.@idx] - .@now;
+        mes "此委託冷卻中，剩餘：" + (.@rem / 3600) + " 小時 " + ((.@rem % 3600) / 60) + " 分。";
+    }
+    // 2. 領賞判定
+    else if (callsub(L_CheckClaimable, .@idx)) {
+        if ($EB_ItemID[.@idx] > 0) {
+            delitem $EB_ItemID[.@idx], $EB_ItemCnt[.@idx];
+        }
+        getexp $EB_BExp[.@idx], $EB_JExp[.@idx];
+        EB_Status[.@idx] = 0;
+        EB_M1[.@idx] = 0;
+        EB_M2[.@idx] = 0;
+        EB_CD[.@idx] = .@cd_time;
+        specialeffect2 249;
+
+        if ($EB_ItemID[.@idx] > 0) {
+            mes "委託達成！收繳 " + $EB_ItemCnt[.@idx] + " 個" + getitemname($EB_ItemID[.@idx]) + "，進入冷卻。";
+        } else {
+            mes "委託達成！已發放經驗並進入冷卻。";
+        }
+    }
+    // 3. 進行中進度顯示
+    else if (EB_Status[.@idx] == 1) {
+        mes callsub(L_BuildProgressStr, .@idx);
+    }
+    // 4. 接取判定
+    else {
+        if (BaseLevel < $EB_ReqLv[.@idx]) {
+            mes "等級不足 " + $EB_ReqLv[.@idx] + " 級，無法接取！";
+        } else if (select("接取此任務:暫時不接") == 1) {
+            EB_Status[.@idx] = 1;
+            EB_M1[.@idx] = 0;
+            EB_M2[.@idx] = 0;
+            if (.@idx == 8) mes "已接取委託！請前往斐揚迷宮洞穴。";
+            else if (.@idx == 10) mes "已接取委託！請前往克魔島密穴。";
+            else mes "已接取委託！";
+        }
+    }
+    next;
+    return;
+
+// --------------------------------------------------------------
+// 工具子程序：判斷是否可回報
+// --------------------------------------------------------------
+L_CheckClaimable:
+    .@i = getarg(0);
+    if ($EB_ItemID[.@i] > 0) {
+        if (EB_Status[.@i] == 1 && EB_M1[.@i] >= $EB_M1_Req[.@i] && countitem($EB_ItemID[.@i]) >= $EB_ItemCnt[.@i]) return 1;
+    } else {
+        if (EB_Status[.@i] == 2) return 1;
+    }
+    return 0;
+
+// --------------------------------------------------------------
+// 工具子程序：組合進行中進度文字
+// --------------------------------------------------------------
+L_BuildProgressStr:
+    .@i = getarg(0);
+    .@str$ = "[進度] " + $EB_M1_Name$[.@i] + "：(" + EB_M1[.@i] + "/" + $EB_M1_Req[.@i] + ")";
+    if ($EB_M2_Req[.@i] > 0) {
+        .@str$ = .@str$ + "，" + $EB_M2_Name$[.@i] + "：(" + EB_M2[.@i] + "/" + $EB_M2_Req[.@i] + ")";
+    }
+    if ($EB_ItemID[.@i] > 0) {
+        .@str$ = .@str$ + "，" + getitemname($EB_ItemID[.@i]) + "：(" + countitem($EB_ItemID[.@i]) + "/" + $EB_ItemCnt[.@i] + ")";
+    }
+    return .@str$ + "。";
+
 // ==============================================================
-// 全域擊殺監聽核心 (自動更新任務計數與跳字提醒，僅限同畫面 20 格內隊友共享)
+// 全域擊殺監聽核心 (自動更新任務計數與跳字提醒，支援 20 格隊友共享)
 // ==============================================================
 OnNPCKillEvent:
-    .@pid = getcharid(1); // 獲取隊伍 ID
+    .@pid = getcharid(1);
 
-    // 情況 A：單人遊玩 (無組隊)，直接結算自己
     if (!.@pid) {
         callsub OnCheckTaskProgress, killedrid;
         end;
     }
 
-    // 情況 B：組隊狀態，共享進度
-    .@killedrid = killedrid; // 將魔物ID轉為腳本局部變數保護
-    getpartymember .@pid, 1; // 填入 $@partymembercid (角色ID)
-    getpartymember .@pid, 2; // 填入 $@partymemberaid (帳號ID)
-    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC; // 抓取擊殺者的正確座標
+    .@killedrid = killedrid;
+    getpartymember .@pid, 1;
+    getpartymember .@pid, 2;
+    getmapxy .@map1$, .@x1, .@y1, UNITTYPE_PC;
 
     for (.@i = 0; .@i < $@partymembercount; ++.@i) {
-        // 精確驗證該隊友角色是否真正處於在線狀態
         if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
-            attachrid $@partymemberaid[.@i]; // 切換至該隊友
+            attachrid $@partymemberaid[.@i];
             getmapxy .@map2$, .@x2, .@y2, UNITTYPE_PC;
 
-            // 條件：同地圖 + 存活 + 擊殺者周圍 20 格視野緩衝區內
             if (.@map1$ == .@map2$ && distance(.@x1, .@y1, .@x2, .@y2) <= 20 && Hp > 0) {
                 callsub OnCheckTaskProgress, .@killedrid;
             }
@@ -600,90 +235,120 @@ OnNPCKillEvent:
     end;
 
 // --------------------------------------------------------------
-// 各任務進度判定子程序 (組隊全體共享進度 + 獨立子程序引擎)
+// 任務擊殺判定子程序 (陣列查表匹配)
 // --------------------------------------------------------------
 OnCheckTaskProgress:
     .@target = getarg(0);
 
-    // 1. 樹精 (1010)
-    if (.@target == 1010 && EB_Q1_Status == 1 && EB_Q1_M1 < 5) {
-        EB_Q1_M1++;
-        dispbottom "【爽缺工作】樹精：(" + EB_Q1_M1 + "/5)，世界樹枝：(" + countitem(1068) + "/3)";
-    }
-    // 2. 青蛇 (1025)
-    if (.@target == 1025 && EB_Q2_Status == 1 && EB_Q2_M1 < 5) {
-        EB_Q2_M1++;
-        if (EB_Q2_M1 >= 5) { EB_Q2_Status = 2; dispbottom "【任務達成】親蛇獵人 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【親蛇獵人】青蛇：(" + EB_Q2_M1 + "/5)";
-    }
-    // 3. 森靈 (1024)
-    if (.@target == 1024 && EB_Q3_Status == 1 && EB_Q3_M1 < 5) {
-        EB_Q3_M1++;
-        if (EB_Q3_M1 >= 5) { EB_Q3_Status = 2; dispbottom "【任務達成】那是有害的洋蔥 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【那是有害的洋蔥】森靈：(" + EB_Q3_M1 + "/5)";
-    }
-    // 4. 魔菇 (1014)
-    if (.@target == 1014 && EB_Q4_Status == 1 && EB_Q4_M1 < 10) {
-        EB_Q4_M1++;
-        if (EB_Q4_M1 >= 10) { EB_Q4_Status = 2; dispbottom "【任務達成】在變成整個都是蘑菇之前 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【在變成整個都是蘑菇之前】魔菇：(" + EB_Q4_M1 + "/10)";
-    }
-    // 5. 蜂兵 (1004)
-    if (.@target == 1004 && EB_Q5_Status == 1 && EB_Q5_M1 < 10) {
-        EB_Q5_M1++;
-        if (EB_Q5_M1 >= 10) { EB_Q5_Status = 2; dispbottom "【任務達成】蜂兵大作戰 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【蜂兵大作戰】蜂兵：(" + EB_Q5_M1 + "/10)";
-    }
-    // 6. 搖滾蝗蟲 (1052)
-    if (.@target == 1052 && EB_Q6_Status == 1 && EB_Q6_M1 < 10) {
-        EB_Q6_M1++;
-        if (EB_Q6_M1 >= 10) { EB_Q6_Status = 2; dispbottom "【任務達成】搖滾蝗蟲大作戰 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【搖滾蝗蟲大作戰】搖滾蝗蟲：(" + EB_Q6_M1 + "/10)";
-    }
-    // 7. 蝸牛 (1094)
-    if (.@target == 1094 && EB_Q7_Status == 1 && EB_Q7_M1 < 10) {
-        EB_Q7_M1++;
-        if (EB_Q7_M1 >= 10) { EB_Q7_Status = 2; dispbottom "【任務達成】傳奇騎士-蝸牛 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【傳奇騎士-蝸牛】蝸牛：(" + EB_Q7_M1 + "/10)";
-    }
-    // 8. 不死戰爭：腐屍 (1015) + 邪骸戰士 (1076)
-    if (.@target == 1015 && EB_Q8_Status == 1 && EB_Q8_M1 < 10) {
-        EB_Q8_M1++;
-        if (EB_Q8_M1 >= 10 && EB_Q8_M2 >= 20) { EB_Q8_Status = 2; dispbottom "【任務達成】不死戰爭 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【不死戰爭】腐屍：(" + EB_Q8_M1 + "/10)，邪骸戰士：(" + EB_Q8_M2 + "/20)";
-    }
-    if (.@target == 1076 && EB_Q8_Status == 1 && EB_Q8_M2 < 20) {
-        EB_Q8_M2++;
-        if (EB_Q8_M1 >= 10 && EB_Q8_M2 >= 20) { EB_Q8_Status = 2; dispbottom "【任務達成】不死戰爭 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【不死戰爭】腐屍：(" + EB_Q8_M1 + "/10)，邪骸戰士：(" + EB_Q8_M2 + "/20)";
-    }
-    // 9. 吵鬧的傢伙們：摩卡 (1055) + 大嘴鳥 (1019)
-    if (.@target == 1055 && EB_Q9_Status == 1 && EB_Q9_M1 < 10) {
-        EB_Q9_M1++;
-        if (EB_Q9_M1 >= 10 && EB_Q9_M2 >= 10) { EB_Q9_Status = 2; dispbottom "【任務達成】吵鬧的傢伙們 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【吵鬧的傢伙們】摩卡：(" + EB_Q9_M1 + "/10)，大嘴鳥：(" + EB_Q9_M2 + "/10)";
-    }
-    if (.@target == 1019 && EB_Q9_Status == 1 && EB_Q9_M2 < 10) {
-        EB_Q9_M2++;
-        if (EB_Q9_M1 >= 10 && EB_Q9_M2 >= 10) { EB_Q9_Status = 2; dispbottom "【任務達成】吵鬧的傢伙們 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【吵鬧的傢伙們】摩卡：(" + EB_Q9_M1 + "/10)，大嘴鳥：(" + EB_Q9_M2 + "/10)";
-    }
-    // 10. 芭比Q：達拉蛙 (1034)
-    if (.@target == 1034 && EB_Q10_Status == 1 && EB_Q10_M1 < 10) {
-        EB_Q10_M1++;
-        dispbottom "【芭比Q的料理地獄】達拉蛙：(" + EB_Q10_M1 + "/10)，粘稠的蹼：(" + countitem(918) + "/10)";
-    }
-    // 11. 水嫩皮膚：海葵 (1068)
-    if (.@target == 1068 && EB_Q11_Status == 1 && EB_Q11_M1 < 10) {
-        EB_Q11_M1++;
-        dispbottom "【水嫩皮膚芭妮Q】海葵：(" + EB_Q11_M1 + "/10)，觸鬚：(" + countitem(962) + "/5)";
-    }
-    // 12. 邪骸食人魚 (1064)
-    if (.@target == 1064 && EB_Q12_Status == 1 && EB_Q12_M1 < 10) {
-        EB_Q12_M1++;
-        if (EB_Q12_M1 >= 10) { EB_Q12_Status = 2; dispbottom "【任務達成】船到橋頭自然直 完成！請回看板領賞。"; specialeffect2 438; }
-        else dispbottom "【船到橋頭自然直】邪骸食人魚：(" + EB_Q12_M1 + "/10)";
-    }
+    for (.@i = 1; .@i <= 12; ++.@i) {
+        if (EB_Status[.@i] != 1) continue;
 
+        .@updated = 0;
+        // 匹配魔物 1
+        if (.@target == $EB_M1_ID[.@i] && EB_M1[.@i] < $EB_M1_Req[.@i]) {
+            EB_M1[.@i]++;
+            .@updated = 1;
+        }
+        // 匹配魔物 2
+        else if ($EB_M2_Req[.@i] > 0 && .@target == $EB_M2_ID[.@i] && EB_M2[.@i] < $EB_M2_Req[.@i]) {
+            EB_M2[.@i]++;
+            .@updated = 1;
+        }
+
+        if (.@updated) {
+            // 檢查是否擊殺全滿 (無道具任務直接標記為 Status 2 可領賞)
+            if ($EB_ItemID[.@i] == 0) {
+                if (EB_M1[.@i] >= $EB_M1_Req[.@i] && ($EB_M2_Req[.@i] == 0 || EB_M2[.@i] >= $EB_M2_Req[.@i])) {
+                    EB_Status[.@i] = 2;
+                    dispbottom "【任務達成】" + $EB_Title$[.@i] + " 完成！請回看板領賞。";
+                    specialeffect2 438;
+                    continue;
+                }
+            }
+
+            // 聊天框跳字反饋
+            .@msg$ = "【" + $EB_Title$[.@i] + "】" + $EB_M1_Name$[.@i] + "：(" + EB_M1[.@i] + "/" + $EB_M1_Req[.@i] + ")";
+            if ($EB_M2_Req[.@i] > 0) {
+                .@msg$ = .@msg$ + "，" + $EB_M2_Name$[.@i] + "：(" + EB_M2[.@i] + "/" + $EB_M2_Req[.@i] + ")";
+            }
+            if ($EB_ItemID[.@i] > 0) {
+                .@msg$ = .@msg$ + "，" + getitemname($EB_ItemID[.@i]) + "：(" + countitem($EB_ItemID[.@i]) + "/" + $EB_ItemCnt[.@i] + ")";
+            }
+            dispbottom .@msg$;
+        }
+    }
     return;
+
+// ==============================================================
+// 任務靜態資料表 (索引 1 ~ 12 一一對齊 Q1 ~ Q12)
+// ==============================================================
+OnInit:
+    // 所屬分區 (1:斐揚原野, 2:普隆德拉, 3:斐揚迷宮, 4:伊斯魯得, 5:克魔島)
+    setarray $EB_Region[1],     1, 1, 1, 1,  2, 2, 2,  3,  4,  5, 5, 5;
+    // 需求等級
+    setarray $EB_ReqLv[1],      1, 15, 15, 15, 10, 10, 10, 15, 20, 30, 30, 30;
+
+    // 任務選單名稱
+    setarray $EB_MenuName$[1],
+        "爽缺工作 (Lv 1)",
+        "親蛇獵人 (Lv 15)",
+        "那是有害的洋蔥 (Lv 15)",
+        "在變成整個都是蘑菇之前 (Lv 15)",
+        "蜂兵大作戰 (Lv 10)",
+        "搖滾蝗蟲大作戰 (Lv 10)",
+        "傳奇騎士-蝸牛 (Lv 10)",
+        "不死戰爭 (Lv 15)",
+        "吵鬧的傢伙們 (Lv 20)",
+        "芭比Q的料理地獄 (Lv 30)",
+        "水嫩皮膚芭妮Q (Lv 30)",
+        "船到橋頭自然直 (Lv 30)";
+
+    // 任務標題 (對話框與廣播用)
+    setarray $EB_Title$[1],
+        "爽缺工作",
+        "親蛇獵人",
+        "那是有害的洋蔥",
+        "在變成整個都是蘑菇之前",
+        "遊戲場穩定大作戰-蜂兵",
+        "遊戲場穩定大作戰-搖滾蝗蟲",
+        "傳奇騎士-蝸牛",
+        "不死戰爭",
+        "吵鬧的傢伙們",
+        "芭比Q的料理地獄",
+        "水嫩皮膚芭妮Q",
+        "船到橋頭自然直";
+
+    // 任務目標描述
+    setarray $EB_Desc$[1],
+        "目標：樹精 5 隻，並收集「世界樹枝」3 個。",
+        "目標：青蛇 5 隻。",
+        "目標：森靈 5 隻。",
+        "目標：魔菇 10 隻。",
+        "目標：蜂兵 10 隻。",
+        "目標：搖滾蝗蟲 10 隻。",
+        "目標：蝸牛 10 隻。",
+        "目標：腐屍 10 隻、邪骸戰士 20 隻。",
+        "目標：摩卡 10 隻、大嘴鳥 10 隻。",
+        "目標：達拉蛙 10 隻，並收集「粘稠的蹼」10 個。",
+        "目標：海葵 10 隻，並收集「觸鬚」5 個。",
+        "目標：邪骸食人魚 10 隻。";
+
+    // 魔物 1 (名稱, ID, 數量)
+    setarray $EB_M1_Name$[1], "樹精", "青蛇", "森靈", "魔菇", "蜂兵", "搖滾蝗蟲", "蝸牛", "腐屍",     "摩卡",   "達拉蛙", "海葵", "邪骸食人魚";
+    setarray $EB_M1_ID[1],    1010,   1025,   1024,   1014,   1004,   1052,       1094,   1015,     1055,     1034,     1068,   1064;
+    setarray $EB_M1_Req[1],   5,      5,      5,      10,     10,     10,         10,     10,       10,       10,       10,     10;
+
+    // 魔物 2 (名稱, ID, 數量，無則填 0)
+    setarray $EB_M2_Name$[1], "", "", "", "", "", "", "", "邪骸戰士", "大嘴鳥", "", "", "";
+    setarray $EB_M2_ID[1],    0,  0,  0,  0,  0,  0,  0,  1076,       1019,     0,  0,  0;
+    setarray $EB_M2_Req[1],   0,  0,  0,  0,  0,  0,  0,  20,         10,       0,  0,  0;
+
+    // 道具需求 (道具ID, 數量，無則填 0)
+    setarray $EB_ItemID[1],   1068, 0, 0, 0, 0, 0, 0, 0, 0, 918, 962, 0;
+    setarray $EB_ItemCnt[1],  3,    0, 0, 0, 0, 0, 0, 0, 0, 10,  5,   0;
+
+    // 經驗獎勵 (Base, Job)
+    setarray $EB_BExp[1], 800,  1600, 1600, 3000, 1200, 1600, 2000, 3200, 4800, 5500, 5500, 5500;
+    setarray $EB_JExp[1], 800,  1400, 1400, 2000, 1000, 1400, 2000, 3000, 4200, 5500, 5500, 5500;
+    end;
 }
